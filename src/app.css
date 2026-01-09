@@ -394,7 +394,7 @@ input[type='number'] {
 	border-width: 0px;
 	padding: 3px 8px;
 	font-size: 0.8em;
-	font-weight: 600;
+	font-weight: 400;
 	font-family: var(--font-mono) !important;
 	@apply rounded-md dark:bg-gray-800 bg-gray-100 mx-0.5;
 }
@@ -622,154 +622,88 @@ text-gray-600 from: https://tailwindcss.com/docs/color */
 	border-width: 0px;
 	padding: 3px 8px;
 	font-size: 0.8em;
-	font-weight: 600;
+	font-weight: 400;
 	font-family: var(--font-mono) !important;
 	@apply rounded-md dark:bg-gray-800 bg-gray-50 mx-0.5;
 }
 
-/* Code styling - GitHub style */
+/* Code styling - One Light/One Dark theme */
 .hljs {
 	@apply rounded-lg;
 	font-family: var(--font-mono) !important;
-	background: #f6f8fa;
-	color: #24292f;
+	font-weight: 400;
+	background: #ffffff;
+	color: #383a42;
+	display: block;
+	overflow-x: auto;
+}
+
+.hljs::-webkit-scrollbar {
+	height: 4px;
 }
 
 .dark .hljs {
-	background: #0d1117;
-	color: #c9d1d9;
+	background: #282c34;
+	color: #abb2bf;
 }
 
+/* Light theme syntax highlighting */
 .hljs-comment,
 .hljs-quote {
-	color: #6e7781;
+	color: #a0a1a7;
 	font-style: italic;
 }
 
-.dark .hljs-comment,
-.dark .hljs-quote {
-	color: #8b949e;
+.hljs-doctag,
+.hljs-formula,
+.hljs-keyword {
+	color: #a626a4;
 }
 
-.hljs-keyword,
+.hljs-deletion,
+.hljs-name,
+.hljs-section,
 .hljs-selector-tag,
 .hljs-subst {
-	color: #cf222e;
-	font-weight: bold;
+	color: #e45649;
 }
 
-.dark .hljs-keyword,
-.dark .hljs-selector-tag,
-.dark .hljs-subst {
-	color: #ff7b72;
+.hljs-literal {
+	color: #0184bb;
 }
 
-.hljs-number,
-.hljs-literal,
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag .hljs-attr {
-	color: #0550ae;
-}
-
-.dark .hljs-number,
-.dark .hljs-literal,
-.dark .hljs-variable,
-.dark .hljs-template-variable,
-.dark .hljs-tag .hljs-attr {
-	color: #79c0ff;
-}
-
-.hljs-string,
-.hljs-doctag {
-	color: #0a3069;
-}
-
-.dark .hljs-string,
-.dark .hljs-doctag {
-	color: #a5d6ff;
-}
-
-.hljs-title,
-.hljs-section,
-.hljs-selector-id {
-	color: #8250df;
-	font-weight: bold;
-}
-
-.dark .hljs-title,
-.dark .hljs-section,
-.dark .hljs-selector-id {
-	color: #d2a8ff;
-}
-
-.hljs-type,
-.hljs-class .hljs-title {
-	color: #953800;
-}
-
-.dark .hljs-type,
-.dark .hljs-class .hljs-title {
-	color: #ffa657;
-}
-
-.hljs-tag,
-.hljs-name,
-.hljs-attribute {
-	color: #116329;
-	font-weight: normal;
-}
-
-.dark .hljs-tag,
-.dark .hljs-name,
-.dark .hljs-attribute {
-	color: #7ee787;
-}
-
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string,
 .hljs-regexp,
-.hljs-link {
-	color: #0550ae;
+.hljs-string {
+	color: #50a14f;
 }
 
-.dark .hljs-regexp,
-.dark .hljs-link {
-	color: #79c0ff;
+.hljs-attr,
+.hljs-number,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable {
+	color: #986801;
 }
 
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
 .hljs-symbol,
-.hljs-bullet {
-	color: #0550ae;
-}
-
-.dark .hljs-symbol,
-.dark .hljs-bullet {
-	color: #79c0ff;
+.hljs-title {
+	color: #4078f2;
 }
 
 .hljs-built_in,
-.hljs-builtin-name {
-	color: #0550ae;
-}
-
-.dark .hljs-built_in,
-.dark .hljs-builtin-name {
-	color: #79c0ff;
-}
-
-.hljs-meta {
-	color: #8250df;
-}
-
-.dark .hljs-meta {
-	color: #d2a8ff;
-}
-
-.hljs-meta .hljs-string {
-	color: #0a3069;
-}
-
-.dark .hljs-meta .hljs-string {
-	color: #a5d6ff;
+.hljs-class .hljs-title,
+.hljs-title.class_ {
+	color: #c18401;
 }
 
 .hljs-emphasis {
@@ -777,27 +711,112 @@ text-gray-600 from: https://tailwindcss.com/docs/color */
 }
 
 .hljs-strong {
-	font-weight: bold;
+	font-weight: 400;
 }
 
-.hljs-deletion {
-	background: #ffebe9;
-	color: #cf222e;
+.hljs-link {
+	text-decoration: underline;
 }
 
-.dark .hljs-deletion {
-	background: #490202;
-	color: #ff7b72;
+/* Dark theme syntax highlighting */
+.dark .hljs-keyword,
+.dark .hljs-operator,
+.dark .hljs-pattern-match {
+	color: #f92672;
 }
 
-.hljs-addition {
-	background: #dafbe1;
-	color: #116329;
+.dark .hljs-function,
+.dark .hljs-pattern-match .hljs-constructor {
+	color: #61aeee;
 }
 
-.dark .hljs-addition {
-	background: #033a16;
-	color: #7ee787;
+.dark .hljs-function .hljs-params {
+	color: #a6e22e;
+}
+
+.dark .hljs-function .hljs-params .hljs-typing {
+	color: #fd971f;
+}
+
+.dark .hljs-module-access .hljs-module {
+	color: #7e57c2;
+}
+
+.dark .hljs-constructor {
+	color: #e2b93d;
+}
+
+.dark .hljs-constructor .hljs-string {
+	color: #9ccc65;
+}
+
+.dark .hljs-comment,
+.dark .hljs-quote {
+	color: #b18eb1;
+	font-style: italic;
+}
+
+.dark .hljs-doctag,
+.dark .hljs-formula {
+	color: #c678dd;
+}
+
+.dark .hljs-deletion,
+.dark .hljs-name,
+.dark .hljs-section,
+.dark .hljs-selector-tag,
+.dark .hljs-subst {
+	color: #e06c75;
+}
+
+.dark .hljs-literal {
+	color: #56b6c2;
+}
+
+.dark .hljs-addition,
+.dark .hljs-attribute,
+.dark .hljs-meta .hljs-string,
+.dark .hljs-regexp,
+.dark .hljs-string {
+	color: #98c379;
+}
+
+.dark .hljs-built_in,
+.dark .hljs-class .hljs-title,
+.dark .hljs-title.class_ {
+	color: #e6c07b;
+}
+
+.dark .hljs-attr,
+.dark .hljs-number,
+.dark .hljs-selector-attr,
+.dark .hljs-selector-class,
+.dark .hljs-selector-pseudo,
+.dark .hljs-template-variable,
+.dark .hljs-type,
+.dark .hljs-variable {
+	color: #d19a66;
+}
+
+.dark .hljs-bullet,
+.dark .hljs-link,
+.dark .hljs-meta,
+.dark .hljs-selector-id,
+.dark .hljs-symbol,
+.dark .hljs-title {
+	color: #61aeee;
+}
+
+.dark .hljs-emphasis {
+	font-style: italic;
+}
+
+.dark .hljs-strong {
+	font-weight: 400;
+}
+
+.dark .hljs-link {
+	text-decoration: underline;
 }
 
 
@@ -992,3 +1011,4 @@ body {
 	padding-bottom: 2rem;
 	/* space for the bottom toolbar */
 }
+
