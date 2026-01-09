@@ -358,9 +358,9 @@ export const generateInitialsImage = (name) => {
 	const initials =
 		sanitizedName.length > 0
 			? sanitizedName[0] +
-				(sanitizedName.split(' ').length > 1
-					? sanitizedName[sanitizedName.lastIndexOf(' ') + 1]
-					: '')
+			(sanitizedName.split(' ').length > 1
+				? sanitizedName[sanitizedName.lastIndexOf(' ') + 1]
+				: '')
 			: '';
 
 	ctx.fillText(initials.toUpperCase(), canvas.width / 2, canvas.height / 2);
@@ -401,6 +401,14 @@ export const copyToClipboard = async (text, html = null, formatted = false) => {
 			styledHtml = `
 			<div>
 				<style>
+					@font-face {
+						font-family: 'IBM Plex Mono';
+						src: url('/assets/fonts/IBMPlexMono-Regular.ttf') format('truetype');
+						font-weight: 400;
+						font-style: normal;
+						font-display: swap;
+					}		
+
 					pre {
 						background-color: #f6f8fa;
 						border-radius: 6px;
@@ -408,7 +416,7 @@ export const copyToClipboard = async (text, html = null, formatted = false) => {
 						overflow: auto;
 					}
 					code {
-						font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+						font-family:'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 						font-size: 14px;
 					}
 					.hljs-keyword { color: #d73a49; }
@@ -516,10 +524,10 @@ export const compareVersion = (latest, current) => {
 	return current === '0.0.0'
 		? false
 		: current.localeCompare(latest, undefined, {
-				numeric: true,
-				sensitivity: 'case',
-				caseFirst: 'upper'
-			}) < 0;
+			numeric: true,
+			sensitivity: 'case',
+			caseFirst: 'upper'
+		}) < 0;
 };
 
 export const extractCurlyBraceWords = (text) => {
