@@ -9,7 +9,7 @@
 	import { indentUnit, LanguageDescription } from '@codemirror/language';
 	import { languages } from '@codemirror/language-data';
 
-	import { antigravity } from '$lib/theme/antigravity';
+	import { antigravityDark, antigravityLight } from '$lib/theme/antigravity';
 
 	import { onMount, createEventDispatcher, getContext, tick, onDestroy } from 'svelte';
 
@@ -270,7 +270,11 @@ print("${endTag}")
 
 		if (isDarkMode) {
 			codeEditor.dispatch({
-				effects: editorTheme.reconfigure(antigravity)
+				effects: editorTheme.reconfigure(antigravityDark)
+			});
+		} else {
+			codeEditor.dispatch({
+				effects: editorTheme.reconfigure(antigravityLight)
 			});
 		}
 
@@ -284,11 +288,11 @@ print("${endTag}")
 						isDarkMode = _isDarkMode;
 						if (_isDarkMode) {
 							codeEditor.dispatch({
-								effects: editorTheme.reconfigure(oneDark)
+								effects: editorTheme.reconfigure(antigravityDark)
 							});
 						} else {
 							codeEditor.dispatch({
-								effects: editorTheme.reconfigure()
+								effects: editorTheme.reconfigure(antigravityLight)
 							});
 						}
 					}

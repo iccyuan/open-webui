@@ -3,41 +3,60 @@ import { Extension } from '@codemirror/state';
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { tags as t } from '@lezer/highlight';
 
-// Antigravity theme colors
-const chalky = '#e5c07b',
-    coral = '#ff7b72',
-    cyan = '#79c0ff',
-    invalid = '#ffffff',
-    ivory = '#e6edf3',
-    stone = '#8b949e',
-    malibu = '#a5d6ff',
-    sage = '#98c379',
-    whiskey = '#ffa657',
-    violet = '#d2a8ff',
-    darkBackground = '#0d1117',
-    highlightBackground = '#1c2128',
-    background = '#0d1117',
-    tooltipBackground = '#1c2128',
-    selection = '#264f78',
-    cursor = '#79c0ff';
+// Dark theme colors (Antigravity)
+const darkColors = {
+    chalky: '#e5c07b',
+    coral: '#ff7b72',
+    cyan: '#79c0ff',
+    invalid: '#ffffff',
+    ivory: '#e6edf3',
+    stone: '#8b949e',
+    malibu: '#a5d6ff',
+    sage: '#98c379',
+    whiskey: '#ffa657',
+    violet: '#d2a8ff',
+    darkBackground: '#0d1117',
+    highlightBackground: '#1c2128',
+    background: '#0d1117',
+    tooltipBackground: '#1c2128',
+    selection: '#264f78',
+    cursor: '#79c0ff'
+};
 
-/// The editor theme styles for Antigravity.
-export const antigravityTheme = EditorView.theme(
+// Light theme colors (GitHub-inspired)
+const lightColors = {
+    coral: '#cf222e',
+    cyan: '#0969da',
+    ivory: '#24292f',
+    stone: '#6e7781',
+    malibu: '#0550ae',
+    whiskey: '#953800',
+    violet: '#8250df',
+    lightBackground: '#ffffff',
+    highlightBackground: '#f6f8fa',
+    background: '#ffffff',
+    tooltipBackground: '#f6f8fa',
+    selection: '#b6e3ff',
+    cursor: '#24292f'
+};
+
+/// Dark theme for Antigravity
+export const antigravityDarkTheme = EditorView.theme(
     {
         '&': {
-            color: ivory,
-            backgroundColor: background
+            color: darkColors.ivory,
+            backgroundColor: darkColors.background
         },
 
         '.cm-content': {
-            caretColor: cursor
+            caretColor: darkColors.cursor
         },
 
-        '.cm-cursor, .cm-dropCursor': { borderLeftColor: cursor },
+        '.cm-cursor, .cm-dropCursor': { borderLeftColor: darkColors.cursor },
         '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
-            { backgroundColor: selection },
+            { backgroundColor: darkColors.selection },
 
-        '.cm-panels': { backgroundColor: darkBackground, color: ivory },
+        '.cm-panels': { backgroundColor: darkColors.darkBackground, color: darkColors.ivory },
         '.cm-panels.cm-panels-top': { borderBottom: '2px solid black' },
         '.cm-panels.cm-panels-bottom': { borderTop: '2px solid black' },
 
@@ -49,7 +68,7 @@ export const antigravityTheme = EditorView.theme(
             backgroundColor: '#6199ff2f'
         },
 
-        '.cm-activeLine': { backgroundColor: '#1c2128' },
+        '.cm-activeLine': { backgroundColor: darkColors.highlightBackground },
         '.cm-selectionMatch': { backgroundColor: '#aafe661a' },
 
         '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
@@ -57,13 +76,13 @@ export const antigravityTheme = EditorView.theme(
         },
 
         '.cm-gutters': {
-            backgroundColor: background,
-            color: stone,
+            backgroundColor: darkColors.background,
+            color: darkColors.stone,
             border: 'none'
         },
 
         '.cm-activeLineGutter': {
-            backgroundColor: highlightBackground
+            backgroundColor: darkColors.highlightBackground
         },
 
         '.cm-foldPlaceholder': {
@@ -74,36 +93,109 @@ export const antigravityTheme = EditorView.theme(
 
         '.cm-tooltip': {
             border: 'none',
-            backgroundColor: tooltipBackground
+            backgroundColor: darkColors.tooltipBackground
         },
         '.cm-tooltip .cm-tooltip-arrow:before': {
             borderTopColor: 'transparent',
             borderBottomColor: 'transparent'
         },
         '.cm-tooltip .cm-tooltip-arrow:after': {
-            borderTopColor: tooltipBackground,
-            borderBottomColor: tooltipBackground
+            borderTopColor: darkColors.tooltipBackground,
+            borderBottomColor: darkColors.tooltipBackground
         },
         '.cm-tooltip-autocomplete': {
             '& > ul > li[aria-selected]': {
-                backgroundColor: highlightBackground,
-                color: ivory
+                backgroundColor: darkColors.highlightBackground,
+                color: darkColors.ivory
             }
         }
     },
     { dark: true }
 );
 
-/// The highlighting style for code in the Antigravity theme.
-export const antigravityHighlightStyle = HighlightStyle.define([
-    { tag: t.keyword, color: cyan },
+/// Light theme for Antigravity
+export const antigravityLightTheme = EditorView.theme(
+    {
+        '&': {
+            color: lightColors.ivory,
+            backgroundColor: lightColors.background
+        },
+
+        '.cm-content': {
+            caretColor: lightColors.cursor
+        },
+
+        '.cm-cursor, .cm-dropCursor': { borderLeftColor: lightColors.cursor },
+        '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
+            { backgroundColor: lightColors.selection },
+
+        '.cm-panels': { backgroundColor: lightColors.lightBackground, color: lightColors.ivory },
+        '.cm-panels.cm-panels-top': { borderBottom: '2px solid #e1e4e8' },
+        '.cm-panels.cm-panels-bottom': { borderTop: '2px solid #e1e4e8' },
+
+        '.cm-searchMatch': {
+            backgroundColor: '#fff8c5',
+            outline: '1px solid #ffd33d'
+        },
+        '.cm-searchMatch.cm-searchMatch-selected': {
+            backgroundColor: '#ffea7f'
+        },
+
+        '.cm-activeLine': { backgroundColor: lightColors.highlightBackground },
+        '.cm-selectionMatch': { backgroundColor: '#c8e1ff' },
+
+        '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+            backgroundColor: '#c8e1ff'
+        },
+
+        '.cm-gutters': {
+            backgroundColor: lightColors.background,
+            color: lightColors.stone,
+            border: 'none'
+        },
+
+        '.cm-activeLineGutter': {
+            backgroundColor: lightColors.highlightBackground
+        },
+
+        '.cm-foldPlaceholder': {
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: '#999'
+        },
+
+        '.cm-tooltip': {
+            border: '1px solid #e1e4e8',
+            backgroundColor: lightColors.tooltipBackground
+        },
+        '.cm-tooltip .cm-tooltip-arrow:before': {
+            borderTopColor: 'transparent',
+            borderBottomColor: 'transparent'
+        },
+        '.cm-tooltip .cm-tooltip-arrow:after': {
+            borderTopColor: lightColors.tooltipBackground,
+            borderBottomColor: lightColors.tooltipBackground
+        },
+        '.cm-tooltip-autocomplete': {
+            '& > ul > li[aria-selected]': {
+                backgroundColor: lightColors.highlightBackground,
+                color: lightColors.ivory
+            }
+        }
+    },
+    { dark: false }
+);
+
+/// Dark theme highlighting style
+export const antigravityDarkHighlightStyle = HighlightStyle.define([
+    { tag: t.keyword, color: darkColors.cyan },
     {
         tag: [t.name, t.deleted, t.character, t.propertyName, t.macroName],
-        color: coral
+        color: darkColors.coral
     },
-    { tag: [t.function(t.variableName), t.labelName], color: violet },
-    { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: whiskey },
-    { tag: [t.definition(t.name), t.separator], color: ivory },
+    { tag: [t.function(t.variableName), t.labelName], color: darkColors.violet },
+    { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: darkColors.whiskey },
+    { tag: [t.definition(t.name), t.separator], color: darkColors.ivory },
     {
         tag: [
             t.typeName,
@@ -115,7 +207,7 @@ export const antigravityHighlightStyle = HighlightStyle.define([
             t.self,
             t.namespace
         ],
-        color: whiskey
+        color: darkColors.whiskey
     },
     {
         tag: [
@@ -127,22 +219,76 @@ export const antigravityHighlightStyle = HighlightStyle.define([
             t.link,
             t.special(t.string)
         ],
-        color: cyan
+        color: darkColors.cyan
     },
-    { tag: [t.meta, t.comment], color: stone },
+    { tag: [t.meta, t.comment], color: darkColors.stone },
     { tag: t.strong, fontWeight: 'bold' },
     { tag: t.emphasis, fontStyle: 'italic' },
     { tag: t.strikethrough, textDecoration: 'line-through' },
-    { tag: t.link, color: stone, textDecoration: 'underline' },
-    { tag: t.heading, fontWeight: 'bold', color: coral },
-    { tag: [t.atom, t.bool, t.special(t.variableName)], color: whiskey },
-    { tag: [t.processingInstruction, t.string, t.inserted], color: malibu },
-    { tag: t.invalid, color: invalid }
+    { tag: t.link, color: darkColors.stone, textDecoration: 'underline' },
+    { tag: t.heading, fontWeight: 'bold', color: darkColors.coral },
+    { tag: [t.atom, t.bool, t.special(t.variableName)], color: darkColors.whiskey },
+    { tag: [t.processingInstruction, t.string, t.inserted], color: darkColors.malibu },
+    { tag: t.invalid, color: darkColors.invalid }
 ]);
 
-/// Extension to enable the Antigravity theme (both the editor theme and
-/// the highlight style).
-export const antigravity: Extension = [
-    antigravityTheme,
-    syntaxHighlighting(antigravityHighlightStyle)
+/// Light theme highlighting style
+export const antigravityLightHighlightStyle = HighlightStyle.define([
+    { tag: t.keyword, color: lightColors.cyan },
+    {
+        tag: [t.name, t.deleted, t.character, t.propertyName, t.macroName],
+        color: lightColors.coral
+    },
+    { tag: [t.function(t.variableName), t.labelName], color: lightColors.violet },
+    { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: lightColors.whiskey },
+    { tag: [t.definition(t.name), t.separator], color: lightColors.ivory },
+    {
+        tag: [
+            t.typeName,
+            t.className,
+            t.number,
+            t.changed,
+            t.annotation,
+            t.modifier,
+            t.self,
+            t.namespace
+        ],
+        color: lightColors.whiskey
+    },
+    {
+        tag: [
+            t.operator,
+            t.operatorKeyword,
+            t.url,
+            t.escape,
+            t.regexp,
+            t.link,
+            t.special(t.string)
+        ],
+        color: lightColors.cyan
+    },
+    { tag: [t.meta, t.comment], color: lightColors.stone },
+    { tag: t.strong, fontWeight: 'bold' },
+    { tag: t.emphasis, fontStyle: 'italic' },
+    { tag: t.strikethrough, textDecoration: 'line-through' },
+    { tag: t.link, color: lightColors.stone, textDecoration: 'underline' },
+    { tag: t.heading, fontWeight: 'bold', color: lightColors.coral },
+    { tag: [t.atom, t.bool, t.special(t.variableName)], color: lightColors.whiskey },
+    { tag: [t.processingInstruction, t.string, t.inserted], color: lightColors.malibu },
+    { tag: t.invalid, color: lightColors.coral }
+]);
+
+/// Extension to enable the Antigravity dark theme
+export const antigravityDark: Extension = [
+    antigravityDarkTheme,
+    syntaxHighlighting(antigravityDarkHighlightStyle)
 ];
+
+/// Extension to enable the Antigravity light theme
+export const antigravityLight: Extension = [
+    antigravityLightTheme,
+    syntaxHighlighting(antigravityLightHighlightStyle)
+];
+
+// Default export for backward compatibility (dark theme)
+export const antigravity = antigravityDark;
