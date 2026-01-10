@@ -379,6 +379,7 @@ input[type='number'] {
 
 .cm-line {
 	font-family: var(--font-mono) !important;
+	font-size:12px;
 }
 
 .tippy-box[data-theme~='dark'] {
