@@ -9,7 +9,7 @@
 	import { indentUnit, LanguageDescription } from '@codemirror/language';
 	import { languages } from '@codemirror/language-data';
 
-	import { oneDark } from '@codemirror/theme-one-dark';
+	import { antigravity } from '$lib/theme/antigravity';
 
 	import { onMount, createEventDispatcher, getContext, tick, onDestroy } from 'svelte';
 
@@ -270,7 +270,7 @@ print("${endTag}")
 
 		if (isDarkMode) {
 			codeEditor.dispatch({
-				effects: editorTheme.reconfigure(oneDark)
+				effects: editorTheme.reconfigure(antigravity)
 			});
 		}
 
