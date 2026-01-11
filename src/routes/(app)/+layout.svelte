@@ -319,7 +319,9 @@
 {#if $user}
 	<div class="app relative">
 		<div
-			class="text-gray-700 dark:text-gray-100 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-black h-screen max-h-[100dvh] overflow-auto flex flex-row justify-end transition-colors duration-300"
+			class="text-gray-700 dark:text-gray-100 h-screen max-h-[100dvh] overflow-auto flex flex-row justify-end"
+			style="background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);"
+			class:dark-gradient={$theme === 'dark'}
 		>
 			{#if !['user', 'admin'].includes($user?.role)}
 				<AccountPending />
