@@ -441,19 +441,19 @@
 			{/if}
 		{:else}
 			<div
-				class="absolute left-0 right-0 py-2.5 pr-3 text-text-300 pl-4.5 text-xs font-medium dark:text-white"
+				class="absolute left-0 right-0 py-2.5 pr-3 text-text-300 pl-4.5 text-xs font-medium dark:text-white z-20"
 			>
 				{lang}
 			</div>
 
 			<div
-				class="sticky {stickyButtonsClassName} left-0 right-0 py-2 pr-3 flex items-center justify-end w-full z-10 text-xs text-black dark:text-white"
+				class="sticky {stickyButtonsClassName} left-0 right-0 py-2 pl-4.5 pr-3 flex items-center justify-end w-full z-10 text-xs text-black dark:text-white rounded-t-xl bg-gray-50"
 			>
 				<div class="flex items-center gap-0.5">
 					<button
-					class="flex gap-1 items-center bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-					on:click={collapseCodeBlock}
-				>
+						class="flex gap-1 items-center bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
+						on:click={collapseCodeBlock}
+					>
 						<div class=" -translate-y-[0.5px]">
 							<ChevronUpDown className="size-3" />
 						</div>
@@ -466,14 +466,14 @@
 					{#if ($config?.features?.enable_code_execution ?? true) && (lang.toLowerCase() === 'python' || lang.toLowerCase() === 'py' || (lang === '' && checkPythonCode(code)))}
 						{#if executing}
 							<div
-							class="run-code-button bg-none border-none p-0.5 cursor-not-allowed bg-white/90 dark:bg-black/90 backdrop-blur-sm"
-						>
+								class="run-code-button bg-none border-none p-0.5 cursor-not-allowed bg-white/90 dark:bg-black/90 backdrop-blur-sm"
+							>
 								{$i18n.t('Running')}
 							</div>
 						{:else if run}
 							<button
-							class="flex gap-1 items-center run-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-							on:click={async () => {
+								class="flex gap-1 items-center run-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
+								on:click={async () => {
 									code = _code;
 									await tick();
 									executePython(code);
@@ -488,23 +488,23 @@
 
 					{#if save}
 						<button
-						class="save-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-						on:click={saveCode}
-					>
+							class="save-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
+							on:click={saveCode}
+						>
 							{saved ? $i18n.t('Saved') : $i18n.t('Save')}
 						</button>
 					{/if}
 
 					<button
-					class="copy-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-					on:click={copyCode}>{copied ? $i18n.t('Copied') : $i18n.t('Copy')}</button
-				>
+						class="copy-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
+						on:click={copyCode}>{copied ? $i18n.t('Copied') : $i18n.t('Copy')}</button
+					>
 
 					{#if preview && ['html', 'svg'].includes(lang)}
 						<button
-						class="flex gap-1 items-center run-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-						on:click={previewCode}
-					>
+							class="flex gap-1 items-center run-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
+							on:click={previewCode}
+						>
 							<div>
 								{$i18n.t('Preview')}
 							</div>

@@ -68,7 +68,7 @@ export const antigravityDarkTheme = EditorView.theme(
             backgroundColor: '#6199ff2f'
         },
 
-        '.cm-activeLine': { backgroundColor: darkColors.highlightBackground },
+        '.cm-activeLine': { backgroundColor: 'transparent' },
         '.cm-selectionMatch': { backgroundColor: '#aafe661a' },
 
         '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
@@ -82,7 +82,7 @@ export const antigravityDarkTheme = EditorView.theme(
         },
 
         '.cm-activeLineGutter': {
-            backgroundColor: darkColors.highlightBackground
+            backgroundColor: 'transparent'
         },
 
         '.cm-foldPlaceholder': {
@@ -141,7 +141,7 @@ export const antigravityLightTheme = EditorView.theme(
             backgroundColor: '#ffea7f'
         },
 
-        '.cm-activeLine': { backgroundColor: lightColors.highlightBackground },
+        '.cm-activeLine': { backgroundColor: 'transparent' },
         '.cm-selectionMatch': { backgroundColor: '#c8e1ff' },
 
         '&.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket': {
@@ -155,7 +155,7 @@ export const antigravityLightTheme = EditorView.theme(
         },
 
         '.cm-activeLineGutter': {
-            backgroundColor: lightColors.highlightBackground
+            backgroundColor: 'transparent'
         },
 
         '.cm-foldPlaceholder': {
