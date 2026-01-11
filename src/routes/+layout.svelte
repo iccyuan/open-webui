@@ -873,19 +873,17 @@
 {/if}
 
 {#if loaded}
-	<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-black transition-colors duration-300">
-		{#if $isApp}
-			<div class="flex flex-row h-screen">
-				<AppSidebar />
+	{#if $isApp}
+		<div class="flex flex-row h-screen">
+			<AppSidebar />
 
-				<div class="w-full flex-1 max-w-[calc(100%-4.5rem)]">
-					<slot />
-				</div>
+			<div class="w-full flex-1 max-w-[calc(100%-4.5rem)]">
+				<slot />
 			</div>
-		{:else}
-			<slot />
-		{/if}
-	</div>
+		</div>
+	{:else}
+		<slot />
+	{/if}
 {/if}
 
 {#if $config?.features.enable_community_sharing}

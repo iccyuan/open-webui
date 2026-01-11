@@ -39,34 +39,6 @@ export default {
 			},
 			transitionProperty: {
 				width: 'width'
-			},
-			backdropBlur: {
-				xs: '2px',
-				sm: '4px',
-				md: '12px',
-				lg: '16px',
-				xl: '24px',
-				'2xl': '40px',
-				'3xl': '64px'
-			},
-			animation: {
-				'gradient-shift': 'gradientShift 15s ease infinite',
-				'float': 'float 6s ease-in-out infinite',
-				'shimmer-glass': 'shimmerGlass 2s infinite'
-			},
-			keyframes: {
-				gradientShift: {
-					'0%, 100%': { backgroundPosition: '0% 50%' },
-					'50%': { backgroundPosition: '100% 50%' }
-				},
-				float: {
-					'0%, 100%': { transform: 'translateY(0px)' },
-					'50%': { transform: 'translateY(-10px)' }
-				},
-				shimmerGlass: {
-					'0%': { backgroundPosition: '-1000px 0' },
-					'100%': { backgroundPosition: '1000px 0' }
-				}
 			}
 		}
 	},

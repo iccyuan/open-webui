@@ -319,9 +319,7 @@
 {#if $user}
 	<div class="app relative">
 		<div
-			class="text-gray-700 dark:text-gray-100 h-screen max-h-[100dvh] overflow-auto flex flex-row justify-end"
-			style="background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);"
-			class:dark-gradient={$theme === 'dark'}
+			class=" text-gray-700 dark:text-gray-100 bg-white dark:bg-gray-900 h-screen max-h-[100dvh] overflow-auto flex flex-row justify-end"
 		>
 			{#if !['user', 'admin'].includes($user?.role)}
 				<AccountPending />
@@ -440,10 +438,5 @@
 	pre[class*='language-'] button:hover {
 		cursor: pointer;
 		background-color: #bcbabb;
-	}
-
-	/* Glassmorphism gradient backgrounds */
-	.dark-gradient {
-		background: linear-gradient(135deg, #171717 0%, #0d0d0d 100%) !important;
 	}
 </style>

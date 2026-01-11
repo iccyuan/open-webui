@@ -6,9 +6,7 @@
 	let selected = '';
 </script>
 
-<div
-	class="min-w-[4.5rem] glass-panel flex gap-2.5 flex-col pt-8 shadow-xl border-r border-gray-200/50 dark:border-gray-800/50"
->
+<div class="min-w-[4.5rem] bg-gray-50 dark:bg-gray-950 flex gap-2.5 flex-col pt-8">
 	<div class="flex justify-center relative">
 		{#if selected === 'home'}
 			<div class="absolute top-0 left-0 flex h-full">
