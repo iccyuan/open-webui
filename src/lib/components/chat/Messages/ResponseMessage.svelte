@@ -690,7 +690,9 @@
 						{/if}
 
 						{#if edit === true}
-							<div class="w-full bg-gray-50 dark:bg-gray-800 rounded-3xl px-5 py-3 my-2">
+							<div
+								class="w-full bg-gray-50/80 dark:bg-gray-800/80 rounded-3xl px-5 py-3 my-2 border border-gray-200/50 dark:border-gray-700/50 shadow-sm"
+							>
 								<textarea
 									id="message-edit-{message.id}"
 									bind:this={editTextAreaElement}
