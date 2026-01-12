@@ -441,13 +441,13 @@
 			{/if}
 		{:else}
 			<div
-				class="absolute left-0 right-0 py-2.5 pr-3 text-text-300 pl-4.5 text-xs font-medium dark:text-white z-20"
+				class="absolute left-0 right-0 py-2.5 pr-3 text-text-300 pl-4.5 text-xs font-medium dark:text-white z-40 pointer-events-none"
 			>
 				{lang}
 			</div>
 
 			<div
-				class="sticky {stickyButtonsClassName} left-0 right-0 py-2 pl-4.5 pr-3 flex items-center justify-end w-full z-10 text-xs text-black dark:text-white rounded-t-xl bg-gray-50"
+				class="sticky {stickyButtonsClassName} left-0 right-0 py-2 pl-4.5 pr-3 flex items-center justify-end w-full z-30 text-xs text-black dark:text-white rounded-t-xl bg-gray-50"
 			>
 				<div class="flex items-center gap-0.5">
 					<button
