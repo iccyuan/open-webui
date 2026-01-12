@@ -400,14 +400,7 @@ export const copyToClipboard = async (text, html = null, formatted = false) => {
 			styledHtml = `
 			<div>
 				<style>
-					@font-face {
-						font-family: 'IBM Plex Mono';
-						src: url('/assets/fonts/IBMPlexMono-Regular.ttf') format('truetype');
-						font-weight: 400;
-						font-style: normal;
-						font-display: swap;
-					}		
-
+			
 					pre {
 						background-color: #f6f8fa;
 						border-radius: 6px;
@@ -415,7 +408,7 @@ export const copyToClipboard = async (text, html = null, formatted = false) => {
 						overflow: auto;
 					}
 					code {
-						font-family:'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+						font-family:'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 						font-size: 14px;
 					}
 					.hljs-keyword { color: #d73a49; }

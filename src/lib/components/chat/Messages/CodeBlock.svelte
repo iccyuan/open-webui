@@ -441,7 +441,7 @@
 			{/if}
 		{:else}
 			<div
-				class="absolute left-0 right-0 py-2.5 pr-3 text-text-300 pl-4.5 text-xs font-medium dark:text-white z-40 pointer-events-none"
+				class="absolute left-0 right-0 py-2 pr-3 text-text-300 pl-4.5 text-xs font-medium dark:text-white z-40 pointer-events-none flex items-center"
 			>
 				{lang}
 			</div>
@@ -550,7 +550,7 @@
 					{/if}
 				{:else}
 					<div
-						class="bg-white dark:bg-black dark:text-white rounded-b-xl pt-0.5 pb-3 px-4 flex flex-col gap-2 text-xs"
+						class="bg-white dark:bg-black dark:text-white rounded-b-xl py-3 px-4 flex items-center justify-center gap-2 text-xs min-h-[3rem]"
 					>
 						<span class="text-gray-500 italic">
 							{$i18n.t('{{COUNT}} hidden lines', {
