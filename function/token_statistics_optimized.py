@@ -188,6 +188,24 @@ class Filter:
             return uv
         return None
 
+    def _clean_stats_from_content(self, content: str) -> str:
+        """
+        从消息内容中移除统计信息
+        查找 "---" 后跟 "📊 **Token 统计**" 的模式并移除
+        """
+        if not isinstance(content, str):
+            return content
+        
+        # 查找统计信息的起始标记
+        stats_marker = "\n\n---\n📊 **Token 统计**"
+        if stats_marker in content:
+            # 找到标记位置并截断
+            idx = content.find(stats_marker)
+            if idx != -1:
+                return content[:idx]
+        
+        return content
+
     async def inlet(
         self,
         body: dict,
@@ -204,11 +222,24 @@ class Filter:
             return body
 
         # ========================================
-        # 第一步：消息截断逻辑 (Context Clear)
+        # 第零步：清理上一次的统计信息
         # ========================================
         messages = body.get("messages", [])
         if not isinstance(messages, list) or not messages:
             return body
+        
+        # 清理所有助手消息中的统计信息
+        for message in messages:
+            if message.get("role") == "assistant":
+                content = message.get("content", "")
+                if isinstance(content, str):
+                    cleaned_content = self._clean_stats_from_content(content)
+                    if cleaned_content != content:
+                        message["content"] = cleaned_content
+
+        # ========================================
+        # 第一步：消息截断逻辑 (Context Clear)
+        # ========================================
 
         user_valves = self._get_user_valves(__user__)
 
