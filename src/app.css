@@ -896,116 +896,200 @@ body {
 
 #note-content-container .ProseMirror {
 	padding-bottom: 2rem;
-	/* space for the bottom toolbar */
 }
-
 /* ============================================
-   Advanced Typewriter Animation Effects
+   Text Output Visual Optimization - Complete
    ============================================ */
 
-/* Character fade-in animation with subtle blur effect */
-@keyframes typewriter-char-fade {
+/* Font rendering optimization */
+.markdown-prose {
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+text-rendering: optimizeLegibility;
+line-height: 1.7;
+letter-spacing: 0.01em;
+}
+
+/* Subtle character fade-in */
+@keyframes text-smooth-in {
+from {
+opacity: 0.7;
+}
+to {
+opacity: 1;
+}
+}
+
+/* Apply to streaming text */
+.chat-assistant .markdown-prose {
+animation: text-smooth-in 0.1s ease-out;
+}
+
+/* Paragraph optimization */
+.markdown-prose p {
+margin-bottom: 1em;
+transition: opacity 0.1s ease-out;
+}
+
+.markdown-prose p:last-child {
+margin-bottom: 0;
+}
+
+/* Last paragraph fade-in */
+.markdown-prose > p:last-child {
+animation: paragraph-fade-in 0.15s ease-out;
+}
+
+@keyframes paragraph-fade-in {
 from {
 opacity: 0;
 transform: translateY(3px);
-filter: blur(1px);
 }
 to {
 opacity: 1;
 transform: translateY(0);
-filter: blur(0);
 }
 }
 
-/* Typing cursor pulse animation */
-@keyframes typing-cursor-pulse {
-0%, 100% {
+/* Code block visual enhancement */
+.markdown-prose code {
+transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.markdown-prose code:hover {
+background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Link smooth effects */
+.markdown-prose a {
+transition: color 0.15s ease, opacity 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.markdown-prose a:hover {
+opacity: 0.8;
+}
+
+/* List item subtle animation */
+.markdown-prose li {
+transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+}
+
+.markdown-prose li:last-child {
+animation: list-item-fade-in 0.15s ease-out;
+}
+
+@keyframes list-item-fade-in {
+from {
+opacity: 0;
+transform: translateX(-3px);
+}
+to {
 opacity: 1;
-transform: scaleY(1);
-}
-50% {
-opacity: 0.3;
-transform: scaleY(0.85);
+transform: translateX(0);
 }
 }
 
-/* Wave ripple effect for streaming text */
-@keyframes text-wave-ripple {
-0%, 100% {
+/* Quote block visual enhancement */
+.markdown-prose blockquote {
+transition: border-color 0.2s ease, background-color 0.2s ease;
+animation: quote-fade-in 0.2s ease-out;
+}
+
+@keyframes quote-fade-in {
+from {
+opacity: 0;
+transform: translateX(-5px);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
+
+.markdown-prose blockquote:hover {
+border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Table interaction optimization */
+.markdown-prose table {
+transition: box-shadow 0.2s ease;
+}
+
+.markdown-prose table:hover {
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.markdown-prose th,
+.markdown-prose td {
+transition: background-color 0.15s ease;
+}
+
+.markdown-prose tr:hover td {
+background-color: rgba(59, 130, 246, 0.03);
+}
+
+/* Heading smooth appearance */
+.markdown-prose h1,
+.markdown-prose h2,
+.markdown-prose h3,
+.markdown-prose h4,
+.markdown-prose h5,
+.markdown-prose h6 {
+animation: heading-fade-in 0.2s ease-out;
+}
+
+@keyframes heading-fade-in {
+from {
+opacity: 0;
+transform: translateY(-3px);
+}
+to {
+opacity: 1;
 transform: translateY(0);
 }
-50% {
-transform: translateY(-2px);
+}
+
+/* Horizontal rule enhancement */
+.markdown-prose hr {
+transition: opacity 0.2s ease;
+animation: hr-expand 0.3s ease-out;
+}
+
+@keyframes hr-expand {
+from {
+transform: scaleX(0);
+opacity: 0;
+}
+to {
+transform: scaleX(1);
+opacity: 1;
 }
 }
 
-/* Gradient cursor glow effect */
-@keyframes cursor-glow {
-0%, 100% {
-box-shadow: 0 0 0 rgba(59, 130, 246, 0);
-}
-50% {
-box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
-}
+/* Image smooth loading */
+.markdown-prose img {
+transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Apply fade-in to streaming characters */
-.streaming-text {
-animation: typewriter-char-fade 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.markdown-prose img:hover {
+transform: scale(1.01);
 }
 
-/* Typing cursor styles */
-.typing-cursor {
-display: inline-block;
-width: 2px;
-height: 1.2em;
-background: linear-gradient(180deg, 
-rgb(59, 130, 246) 0%, 
-rgba(59, 130, 246, 0.3) 100%);
-margin-left: 2px;
-vertical-align: text-bottom;
-animation: typing-cursor-pulse 1s ease-in-out infinite,
-           cursor-glow 2s ease-in-out infinite;
-border-radius: 1px;
+/* Streaming content smooth transition */
+.streaming-content {
+transition: all 0.05s ease-out;
 }
 
-/* Dark mode cursor */
-.dark .typing-cursor {
-background: linear-gradient(180deg, 
-rgb(96, 165, 250) 0%, 
-rgba(96, 165, 250, 0.3) 100%);
-}
-
-/* Wave ripple effect (optional, can be enabled per element) */
-.streaming-wave span {
-display: inline-block;
-animation: text-wave-ripple 0.6s ease-in-out;
-animation-delay: calc(var(--char-index, 0) * 0.03s);
-}
-
-/* Smooth transition for all streaming text */
-.chat-assistant .markdown-prose {
-transition: opacity 0.15s ease-out;
-}
-
-/* Enhanced streaming state indicator */
+/* Subtle typing indicator (optional) */
 .streaming-active::after {
 content: '';
-display: inline-block;
-width: 2px;
-height: 1.2em;
-background: linear-gradient(180deg, 
-rgb(59, 130, 246) 0%, 
-rgba(59, 130, 246, 0.3) 100%);
+opacity: 0.3;
 margin-left: 2px;
-vertical-align: text-bottom;
-animation: typing-cursor-pulse 1s ease-in-out infinite,
-           cursor-glow 2s ease-in-out infinite;
-border-radius: 1px;
+animation: cursor-blink 1s step-end infinite;
 }
 
-.dark .streaming-active::after {
-background: linear-gradient(180deg, 
-rgb(96, 165, 250) 0%, 
-rgba(96, 165, 250, 0.3) 100%);
+@keyframes cursor-blink {
+50% {
+opacity: 0;
+}
 }
