@@ -92,17 +92,96 @@ async function* openAIStreamToIterator(
 	}
 }
 
-// streamLargeDeltasAsRandomChunks will chunk large deltas (length > 5) into random sized chunks between 1-3 characters
-// This is to simulate a more fluid streaming, even though some providers may send large chunks of text at once
+// Advanced typewriter animation with actual character width measurement
+// Uses Canvas API to measure real rendered width for optimal chunking
 async function* streamLargeDeltasAsRandomChunks(
 	iterator: AsyncGenerator<TextStreamUpdate>
 ): AsyncGenerator<TextStreamUpdate> {
+	// Canvas-based character width measurement (cached for performance)
+	const widthCache = new Map<string, number>();
+	let canvas: HTMLCanvasElement | null = null;
+	let ctx: CanvasRenderingContext2D | null = null;
+
+	const getCharacterWidth = (char: string): number => {
+		// Check cache first
+		if (widthCache.has(char)) {
+			return widthCache.get(char)!;
+		}
+
+		// Lazy initialize canvas
+		if (!canvas) {
+			canvas = document.createElement('canvas');
+			ctx = canvas.getContext('2d');
+			if (ctx) {
+				// Use a common font for measurement
+				ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+			}
+		}
+
+		if (!ctx) {
+			// Fallback: estimate based on byte length
+			return new Blob([char]).size;
+		}
+
+		// Measure actual width
+		const metrics = ctx.measureText(char);
+		const width = metrics.width;
+
+		// Cache the result
+		widthCache.set(char, width);
+
+		return width;
+	};
+
+	// Get optimal chunk based on actual rendered width
+	const getOptimalChunk = (content: string): string => {
+		const TARGET_WIDTH = 80; // Target pixel width (adjustable)
+		let currentWidth = 0;
+		let chunkEnd = 0;
+
+		for (let i = 0; i < content.length; i++) {
+			const char = content[i];
+			const charWidth = getCharacterWidth(char);
+
+			if (currentWidth + charWidth > TARGET_WIDTH && chunkEnd > 0) {
+				break;
+			}
+
+			currentWidth += charWidth;
+			chunkEnd = i + 1;
+		}
+
+		return content.slice(0, Math.max(1, chunkEnd));
+	};
+
+	// Smart delay based on punctuation and content type
+	const getSmartDelay = (chunk: string): number => {
+		const lastChar = chunk[chunk.length - 1];
+
+		// Sentence endings - longer pause for natural reading rhythm
+		if (lastChar.match(/[。！？.!?]/)) return 80;
+
+		// Commas - medium pause
+		if (lastChar.match(/[，,、]/)) return 30;
+
+		// Semicolons and colons
+		if (lastChar.match(/[；;：:]/)) return 40;
+
+		// Line breaks - noticeable pause
+		if (lastChar === '\n') return 50;
+
+		// Code-like content (fast)
+		if (chunk.match(/^[a-zA-Z0-9_\-+={}[\]()<>\/\\|&*^%$#@!~`'"]+$/)) return 1;
+
+		// Default - smooth and fast
+		return 2;
+	};
+
 	for await (const textStreamUpdate of iterator) {
 		if (textStreamUpdate.done) {
 			yield textStreamUpdate;
 			return;
 		}
-
 		if (textStreamUpdate.error) {
 			yield textStreamUpdate;
 			continue;
@@ -121,20 +200,25 @@ async function* streamLargeDeltasAsRandomChunks(
 		}
 
 		let content = textStreamUpdate.value;
-		if (content.length < 5) {
+
+		// Short content - output directly
+		if (content.length < 3) {
 			yield { done: false, value: content };
 			continue;
 		}
-		while (content != '') {
-			const chunkSize = Math.min(Math.floor(Math.random() * 3) + 1, content.length);
-			const chunk = content.slice(0, chunkSize);
+
+		// Smart chunking with width-based optimization
+		while (content.length > 0) {
+			const chunk = getOptimalChunk(content);
 			yield { done: false, value: chunk };
-			// Do not sleep if the tab is hidden
-			// Timers are throttled to 1s in hidden tabs
+
+			// Smart delay with punctuation awareness
+			// Do not sleep if the tab is hidden (timers are throttled to 1s)
 			if (document?.visibilityState !== 'hidden') {
-				await sleep(5);
+				await sleep(getSmartDelay(chunk));
 			}
-			content = content.slice(chunkSize);
+
+			content = content.slice(chunk.length);
 		}
 	}
 }
