@@ -5,32 +5,35 @@
  * This server can be imported into Open WebUI as an external tool via openapi.json.
  * 
  * Installation:
- *   npm install express cors swagger-ui-express
+ *   npm install express cors
  *   npm install -g agent-browser
  * 
  * Usage:
  *   node openapi-server.js
  * 
  * OpenAPI spec available at: http://localhost:5000/openapi.json
- * Swagger UI available at: http://localhost:5000/docs
  */
 
-const express = require('express');
-const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const { exec } = require('child_process');
-const util = require('util');
-const fs = require('fs');
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-const execPromise = util.promisify(exec);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const execPromise = promisify(exec);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Load OpenAPI specification
 const openapiSpec = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'openapi.json'), 'utf8')
+    readFileSync(join(__dirname, 'openapi.json'), 'utf8')
 );
+
 
 // Update server URL in spec based on environment
 openapiSpec.servers[0].url = `http://localhost:${PORT}`;
@@ -44,9 +47,6 @@ app.get('/openapi.json', (req, res) => {
     res.json(openapiSpec);
 });
 
-// Serve Swagger UI
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
-
 // Health check
 app.get('/health', (req, res) => {
     res.json({
@@ -55,6 +55,7 @@ app.get('/health', (req, res) => {
         version: openapiSpec.info.version
     });
 });
+
 
 /**
  * POST /search
@@ -228,13 +229,13 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`🚀 Agent Browser OpenAPI Server running on http://localhost:${PORT}`);
     console.log(`📋 OpenAPI Spec: http://localhost:${PORT}/openapi.json`);
-    console.log(`📖 Swagger UI: http://localhost:${PORT}/docs`);
     console.log(`\n🔧 To use in Open WebUI:`);
     console.log(`   1. Go to Workspace -> Tools`);
     console.log(`   2. Click "Import Tool"`);
     console.log(`   3. Enter URL: http://localhost:${PORT}/openapi.json`);
     console.log(`   (Use http://host.docker.internal:${PORT}/openapi.json if Open WebUI is in Docker)\n`);
 });
+
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
