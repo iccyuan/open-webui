@@ -22,6 +22,7 @@
 
 	export let id: string;
 	export let done = true;
+	export let streamMode = 'word';
 	export let tokens: Token[];
 	export let sourceIds = [];
 	export let onSourceClick: Function = () => {};
@@ -62,7 +63,13 @@
 				title={token.title}
 				on:click={(e) => handleLinkClick(e, token.href)}
 			>
-				<svelte:self id={`${id}-a`} tokens={token.tokens} {onSourceClick} {done} />
+				<svelte:self
+					id={`${id}-a`}
+					tokens={token.tokens}
+					{onSourceClick}
+					{done}
+					{streamMode}
+				/>
 			</a>
 		{:else}
 			<a
@@ -112,9 +119,9 @@
 		{#if (sourceIds ?? []).length > 0}
 			<SourceToken {id} {token} {sourceIds} onClick={onSourceClick} />
 		{:else}
-			<TextToken {token} {done} />
+			<TextToken {token} {done} {streamMode} />
 		{/if}
 	{:else if token.type === 'text'}
-		<TextToken {token} {done} />
+		<TextToken {token} {done} {streamMode} />
 	{/if}
 {/each}

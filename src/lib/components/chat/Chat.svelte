@@ -112,6 +112,85 @@
 	let processing = '';
 	let messagesContainerElement: HTMLDivElement;
 
+	type StreamStats = {
+		lastAt: number;
+		lastFlushAt: number;
+		avgDeltaMs: number;
+		samples: number;
+		fast: boolean;
+		buffer: string;
+	};
+
+	const STREAM_FAST_AVG_MS = 25;
+	const STREAM_FAST_MIN_SAMPLES = 6;
+	const STREAM_LINE_MIN_CHARS = 80;
+	const STREAM_LINE_MAX_WAIT_MS = 120;
+
+	const getStreamStats = (message) => {
+		if (!message.streamStats) {
+			message.streamStats = {
+				lastAt: 0,
+				lastFlushAt: 0,
+				avgDeltaMs: 0,
+				samples: 0,
+				fast: false,
+				buffer: ''
+			} as StreamStats;
+		}
+
+		return message.streamStats as StreamStats;
+	};
+
+	const appendStreamValue = (message, value: string) => {
+		const stats = getStreamStats(message);
+		const now = performance.now();
+
+		if (stats.lastAt) {
+			const delta = now - stats.lastAt;
+			stats.avgDeltaMs = stats.avgDeltaMs ? stats.avgDeltaMs * 0.8 + delta * 0.2 : delta;
+			stats.samples += 1;
+
+			if (!stats.fast && stats.samples >= STREAM_FAST_MIN_SAMPLES) {
+				stats.fast = stats.avgDeltaMs <= STREAM_FAST_AVG_MS;
+			}
+		}
+
+		stats.lastAt = now;
+		message.streamMode = stats.fast ? 'line' : 'word';
+
+		if (!stats.fast) {
+			stats.buffer = '';
+			stats.lastFlushAt = now;
+			return value;
+		}
+
+		stats.buffer += value;
+		let flushIndex = stats.buffer.lastIndexOf('\n');
+		let shouldFlush = flushIndex !== -1;
+
+		if (!shouldFlush) {
+			const exceededChars = stats.buffer.length >= STREAM_LINE_MIN_CHARS;
+			const exceededWait =
+				stats.lastFlushAt > 0 && now - stats.lastFlushAt >= STREAM_LINE_MAX_WAIT_MS;
+
+			if (exceededChars || exceededWait) {
+				flushIndex = stats.buffer.length - 1;
+				shouldFlush = flushIndex >= 0;
+			}
+		}
+
+		if (!shouldFlush) {
+			return '';
+		}
+
+		const endIndex = flushIndex + 1;
+		const chunk = stats.buffer.slice(0, endIndex);
+		stats.buffer = stats.buffer.slice(endIndex);
+		stats.lastFlushAt = now;
+
+		return chunk;
+	};
+
 	let navbarElement;
 
 	let showEventConfirmation = false;
@@ -1418,33 +1497,37 @@
 				if (message.content == '' && value == '\n') {
 					console.log('Empty response');
 				} else {
-					message.content += value;
+					const appendValue = appendStreamValue(message, value);
 
-					if (navigator.vibrate && ($settings?.hapticFeedback ?? false)) {
-						navigator.vibrate(5);
-					}
+					if (appendValue) {
+						message.content += appendValue;
 
-					// Emit chat event for TTS
-					const messageContentParts = getMessageContentParts(
-						removeAllDetails(message.content),
-						$config?.audio?.tts?.split_on ?? 'punctuation'
-					);
-					messageContentParts.pop();
+						if (navigator.vibrate && ($settings?.hapticFeedback ?? false)) {
+							navigator.vibrate(5);
+						}
 
-					// dispatch only last sentence and make sure it hasn't been dispatched before
-					if (
-						messageContentParts.length > 0 &&
-						messageContentParts[messageContentParts.length - 1] !== message.lastSentence
-					) {
-						message.lastSentence = messageContentParts[messageContentParts.length - 1];
-						eventTarget.dispatchEvent(
-							new CustomEvent('chat', {
-								detail: {
-									id: message.id,
-									content: messageContentParts[messageContentParts.length - 1]
-								}
-							})
+						// Emit chat event for TTS
+						const messageContentParts = getMessageContentParts(
+							removeAllDetails(message.content),
+							$config?.audio?.tts?.split_on ?? 'punctuation'
 						);
+						messageContentParts.pop();
+
+						// dispatch only last sentence and make sure it hasn't been dispatched before
+						if (
+							messageContentParts.length > 0 &&
+							messageContentParts[messageContentParts.length - 1] !== message.lastSentence
+						) {
+							message.lastSentence = messageContentParts[messageContentParts.length - 1];
+							eventTarget.dispatchEvent(
+								new CustomEvent('chat', {
+									detail: {
+										id: message.id,
+										content: messageContentParts[messageContentParts.length - 1]
+									}
+								})
+							);
+						}
 					}
 				}
 			}
@@ -1494,6 +1577,11 @@
 		history.messages[message.id] = message;
 
 		if (done) {
+			if (message.streamStats?.buffer) {
+				message.content += message.streamStats.buffer;
+				message.streamStats.buffer = '';
+			}
+
 			message.done = true;
 
 			if ($settings.responseAutoCopy) {

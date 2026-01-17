@@ -30,6 +30,7 @@
 	export let sourceIds = [];
 
 	export let done = true;
+	export let streamMode = 'word';
 
 	export let save = false;
 	export let preview = false;
@@ -97,6 +98,7 @@
 				id={`${id}-${tokenIdx}-h`}
 				tokens={token.tokens}
 				{done}
+				{streamMode}
 				{sourceIds}
 				{onSourceClick}
 			/>
@@ -149,6 +151,7 @@
 												id={`${id}-${tokenIdx}-header-${headerIdx}`}
 												tokens={header.tokens}
 												{done}
+												{streamMode}
 												{sourceIds}
 												{onSourceClick}
 											/>
@@ -175,6 +178,7 @@
 												id={`${id}-${tokenIdx}-row-${rowIdx}-${cellIdx}`}
 												tokens={cell.tokens}
 												{done}
+												{streamMode}
 												{sourceIds}
 												{onSourceClick}
 											/>
@@ -329,6 +333,7 @@
 					tokens={marked.lexer(decode(token.text))}
 					attributes={token?.attributes}
 					{done}
+					{streamMode}
 					{editCodeBlock}
 					{onTaskClick}
 					{sourceIds}
@@ -358,6 +363,7 @@
 					id={`${id}-${tokenIdx}-p`}
 					tokens={token.tokens ?? []}
 					{done}
+					{streamMode}
 					{sourceIds}
 					{onSourceClick}
 				/>
@@ -368,6 +374,7 @@
 					id={`${id}-${tokenIdx}-p`}
 					tokens={token.tokens ?? []}
 					{done}
+					{streamMode}
 					{sourceIds}
 					{onSourceClick}
 				/>
@@ -381,6 +388,7 @@
 						id={`${id}-${tokenIdx}-t`}
 						tokens={token.tokens}
 						{done}
+						{streamMode}
 						{sourceIds}
 						{onSourceClick}
 					/>
@@ -393,6 +401,7 @@
 				id={`${id}-${tokenIdx}-p`}
 				tokens={token.tokens ?? []}
 				{done}
+				{streamMode}
 				{sourceIds}
 				{onSourceClick}
 			/>

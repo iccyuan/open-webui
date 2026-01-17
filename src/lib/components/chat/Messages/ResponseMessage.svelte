@@ -112,6 +112,7 @@
 			usage?: unknown;
 		};
 		annotation?: { type: string; rating: number };
+		streamMode?: 'word' | 'line';
 	}
 
 	export let chatId = '';
@@ -770,6 +771,7 @@
 									{history}
 									{selectedModels}
 									content={message.content}
+									streamMode={message?.streamMode ?? 'word'}
 									sources={message.sources}
 									floatingButtons={message?.done &&
 										!readOnly &&

@@ -18,6 +18,7 @@
 
 	export let id;
 	export let content;
+	export let streamMode = 'word';
 
 	export let history;
 	export let messageId;
@@ -141,6 +142,7 @@
 		{save}
 		{preview}
 		{done}
+		{streamMode}
 		{editCodeBlock}
 		{topPadding}
 		sourceIds={(sources ?? []).reduce((acc, source) => {

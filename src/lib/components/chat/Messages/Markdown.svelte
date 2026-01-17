@@ -15,6 +15,7 @@
 	export let id = '';
 	export let content;
 	export let done = true;
+	export let streamMode = 'word';
 	export let model = null;
 	export let save = false;
 	export let preview = false;
@@ -63,6 +64,7 @@
 		{tokens}
 		{id}
 		{done}
+		{streamMode}
 		{save}
 		{preview}
 		{paragraphTag}
