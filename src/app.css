@@ -918,7 +918,7 @@ body {
 
 /* Paragraph optimization */
 .markdown-prose p {
-	margin-bottom: 1em;
+	margin-bottom: 0.35em;
 }
 
 .markdown-prose p:last-child {
