@@ -36,6 +36,7 @@
 <style>
 	.streaming-code {
 		display: inline-block;
+		vertical-align: baseline;
 		will-change: transform, opacity;
 		animation: smooth-code-appear 0.18s cubic-bezier(0.33, 1, 0.68, 1) forwards;
 	}

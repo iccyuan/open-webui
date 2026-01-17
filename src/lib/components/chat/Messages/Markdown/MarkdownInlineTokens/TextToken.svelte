@@ -37,6 +37,7 @@
 	.streaming-word,
 	.streaming-line {
 		display: inline-block;
+		vertical-align: baseline;
 		will-change: transform, opacity;
 	}
 
