@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
-	import { cubicOut, cubicInOut } from 'svelte/easing';
-
 	export let token;
 	export let done = true;
 	export let streamMode = 'word';
@@ -18,7 +15,7 @@
 	{token?.raw}
 {:else if streamMode === 'line'}
 	{#each lines as line, lineIdx}
-		<span class="streaming-line" in:fly={{ y: -8, duration: 200, easing: cubicOut }}>
+		<span class="streaming-line">
 			{line}
 		</span>
 		{#if lineIdx < lines.length - 1}
@@ -27,7 +24,7 @@
 	{/each}
 {:else}
 	{#each words as text}
-		<span class="streaming-word" in:fly={{ x: -6, duration: 180, easing: cubicOut }}>
+		<span class="streaming-word">
 			{text}{' '}
 		</span>
 	{/each}
@@ -38,15 +35,14 @@
 	.streaming-line {
 		display: inline-block;
 		vertical-align: baseline;
-		will-change: transform, opacity;
 	}
 
 	.streaming-word {
-		animation: smooth-appear 0.18s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+		animation: smooth-appear 0.18s cubic-bezier(0.33, 1, 0.68, 1) both;
 	}
 
 	.streaming-line {
-		animation: smooth-line-appear 0.2s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+		animation: smooth-line-appear 0.2s cubic-bezier(0.33, 1, 0.68, 1) both;
 	}
 
 	@keyframes smooth-appear {
