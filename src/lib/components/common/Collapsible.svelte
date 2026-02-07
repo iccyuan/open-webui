@@ -250,11 +250,11 @@
 								<ChevronRight className="size-3" />
 							</div>
 							<!-- Lightbulb Icon -->
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 text-purple-500 dark:text-purple-400">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 text-purple-700 dark:text-purple-700">
 								<path d="M12 .75a8.25 8.25 0 0 0-4.135 15.39c.686.398 1.115 1.008 1.134 1.623a.75.75 0 0 0 .75.737h4.502a.75.75 0 0 0 .75-.737c.02-.615.448-1.225 1.134-1.623A8.25 8.25 0 0 0 12 .75Z"/>
 								<path fill-rule="evenodd" d="M9.013 19.9a.75.75 0 0 1 .877-.597 11.319 11.319 0 0 0 4.22 0 .75.75 0 1 1 .28 1.473 12.819 12.819 0 0 1-4.78 0 .75.75 0 0 1-.597-.876ZM9.754 22.344a.75.75 0 0 1 .824-.668 13.682 13.682 0 0 0 2.844 0 .75.75 0 1 1 .156 1.492 15.156 15.156 0 0 1-3.156 0 .75.75 0 0 1-.668-.824Z" clip-rule="evenodd"/>
 							</svg>
-							<span class="text-sm font-medium text-purple-600 dark:text-purple-400">
+							<span class="text-sm font-medium text-purple-700 dark:text-purple-700">
 								{#if attributes?.done === 'true' && attributes?.duration}
 									{#if attributes.duration < 1}
 										{$i18n.t('Thought for less than a second')}
