@@ -61,14 +61,27 @@
 	let messagesLoading = false;
 
 	const loadMoreMessages = async () => {
-		// scroll slightly down to disable continuous loading
+		if (messagesLoading) return;
+
 		const element = document.getElementById('messages-container');
-		element.scrollTop = element.scrollTop + 100;
+
+		// Record current scroll state before loading
+		const previousScrollHeight = element.scrollHeight;
+		const previousScrollTop = element.scrollTop;
 
 		messagesLoading = true;
 		messagesCount += 20;
 
 		await tick();
+
+		// Restore scroll position to maintain visual continuity
+		// The new content is added at the top, so we need to adjust scrollTop
+		const newScrollHeight = element.scrollHeight;
+		const heightDifference = newScrollHeight - previousScrollHeight;
+
+		if (heightDifference > 0) {
+			element.scrollTop = previousScrollTop + heightDifference;
+		}
 
 		messagesLoading = false;
 	};
@@ -421,8 +434,9 @@
 					<h2 class="sr-only" id="chat-conversation">{$i18n.t('Chat Conversation')}</h2>
 					{#if messages.at(0)?.parentId !== null}
 						<Loader
+							rootMargin="800px 0px 0px 0px"
+							threshold={0}
 							on:visible={(e) => {
-								console.log('visible');
 								if (!messagesLoading) {
 									loadMoreMessages();
 								}

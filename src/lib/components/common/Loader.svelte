@@ -2,6 +2,9 @@
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	const dispatch = createEventDispatcher();
 
+	export let rootMargin: string = '0px';
+	export let threshold: number = 0.1;
+
 	let loaderElement: HTMLElement;
 
 	let observer;
@@ -24,8 +27,8 @@
 			},
 			{
 				root: null, // viewport
-				rootMargin: '0px',
-				threshold: 0.1 // When 10% of the loader is visible
+				rootMargin: rootMargin,
+				threshold: threshold
 			}
 		);
 
