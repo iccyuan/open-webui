@@ -111,10 +111,11 @@
 	let autoScroll = true;
 	let processing = '';
 	let messagesContainerElement: HTMLDivElement;
-	
+
 	// Store scroll position per chat
 	let chatScrollPositions = {};
 	let lastChatId = null;
+	let scrollRestorationObserver: ResizeObserver | null = null;
 
 	type StreamStats = {
 		lastAt: number;
@@ -271,19 +272,55 @@
 		if (chatIdProp && (await loadChat())) {
 			await tick();
 			loading = false;
-			
+
 			// Restore saved scroll position or scroll to bottom for new/unvisited chats
 			const savedPosition = chatScrollPositions[chatIdProp];
 			if (savedPosition !== undefined) {
-				window.setTimeout(() => {
-					if (messagesContainerElement) {
-						messagesContainerElement.scrollTop = savedPosition;
+				// Clean up previous observer if exists
+				if (scrollRestorationObserver) {
+					scrollRestorationObserver.disconnect();
+					scrollRestorationObserver = null;
+				}
+
+				// Use ResizeObserver to wait for lazy-loaded content to render
+				let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
+				let lastHeight = 0;
+
+				scrollRestorationObserver = new ResizeObserver(() => {
+					if (!messagesContainerElement) return;
+
+					const currentHeight = messagesContainerElement.scrollHeight;
+
+					// Clear previous timeout
+					if (resizeTimeout) {
+						clearTimeout(resizeTimeout);
 					}
-				}, 50);
+
+					// Wait for height to stabilize (no changes for 100ms)
+					resizeTimeout = setTimeout(() => {
+						if (messagesContainerElement && Math.abs(currentHeight - lastHeight) < 10) {
+							// Height has stabilized, restore scroll position
+							messagesContainerElement.scrollTop = savedPosition;
+
+							// Clean up observer
+							if (scrollRestorationObserver) {
+								scrollRestorationObserver.disconnect();
+								scrollRestorationObserver = null;
+							}
+						}
+						lastHeight = currentHeight;
+					}, 100);
+				});
+
+				if (messagesContainerElement) {
+					scrollRestorationObserver.observe(messagesContainerElement);
+					// Also set initial position immediately
+					messagesContainerElement.scrollTop = savedPosition;
+				}
 			} else {
-				window.setTimeout(() => scrollToBottom(), 0);
+				requestAnimationFrame(() => scrollToBottom());
 			}
-			
+
 			lastChatId = chatIdProp;
 
 			await tick();
@@ -746,6 +783,12 @@
 			window.removeEventListener('message', onMessageHandler);
 			$socket?.off('events', chatEventHandler);
 			$audioQueue?.destroy();
+
+			// Clean up scroll restoration observer
+			if (scrollRestorationObserver) {
+				scrollRestorationObserver.disconnect();
+				scrollRestorationObserver = null;
+			}
 		} catch (e) {
 			console.error(e);
 		}
