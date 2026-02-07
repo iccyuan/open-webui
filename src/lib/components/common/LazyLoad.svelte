@@ -2,27 +2,31 @@
 	import { onMount } from 'svelte';
 
 	export let className = '';
-	export let threshold = 0.1;
-	export let rootMargin = '50px';
-	
+	export let threshold = 0.01;
+	export let rootMargin = '500px';
+	export let keepAlive = false;
+
 	let containerElement;
 	let isVisible = false;
-	let hasBeenVisible = false;
+	let placeholderHeight = 0;
+	let observer;
 
 	onMount(() => {
-		const observer = new IntersectionObserver(
+		observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
-					isVisible = entry.isIntersecting;
-					if (isVisible && !hasBeenVisible) {
-						hasBeenVisible = true;
+					if (entry.isIntersecting) {
+						isVisible = true;
+					} else if (!keepAlive) {
+						// Record current height before unmounting content
+						if (containerElement && containerElement.offsetHeight > 0) {
+							placeholderHeight = containerElement.offsetHeight;
+						}
+						isVisible = false;
 					}
 				});
 			},
-			{
-				threshold,
-				rootMargin
-			}
+			{ threshold, rootMargin }
 		);
 
 		if (containerElement) {
@@ -30,21 +34,19 @@
 		}
 
 		return () => {
-			if (containerElement) {
-				observer.unobserve(containerElement);
-			}
+			observer?.disconnect();
 		};
 	});
 </script>
 
 <div bind:this={containerElement} class={className}>
-	{#if hasBeenVisible}
+	{#if isVisible || keepAlive}
 		<slot />
+	{:else if placeholderHeight > 0}
+		<div style="height: {placeholderHeight}px;" />
 	{:else}
 		<slot name="placeholder">
-			<div class="min-h-20 flex items-center justify-center text-gray-400 dark:text-gray-600">
-				<!-- Placeholder while loading -->
-			</div>
+			<div style="min-height: 3rem;" />
 		</slot>
 	{/if}
 </div>

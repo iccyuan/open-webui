@@ -8,10 +8,10 @@
 	import { settings } from '$lib/stores';
 	import { copyToClipboard } from '$lib/utils';
 
+	import LazyLoad from '$lib/components/common/LazyLoad.svelte';
 	import MultiResponseMessages from './MultiResponseMessages.svelte';
 	import ResponseMessage from './ResponseMessage.svelte';
 	import UserMessage from './UserMessage.svelte';
-	import LazyLoad from '$lib/components/common/LazyLoad.svelte';
 
 	export let chatId;
 	export let selectedModels = [];
@@ -44,6 +44,7 @@
 	export let readOnly = false;
 	export let editCodeBlock = true;
 	export let topPadding = false;
+	export let isLastMessage = false;
 </script>
 
 <div
@@ -53,7 +54,7 @@
 		: 'max-w-5xl'} mx-auto rounded-lg group"
 >
 	{#if history.messages[messageId]}
-		<LazyLoad className="w-full" threshold={0.05} rootMargin="200px">
+		<LazyLoad className="w-full" rootMargin="500px" keepAlive={isLastMessage}>
 			{#if history.messages[messageId].role === 'user'}
 				<UserMessage
 					{user}
@@ -129,9 +130,7 @@
 				{/key}
 			{/if}
 			<svelte:fragment slot="placeholder">
-				<div class="min-h-12 opacity-30">
-					<!-- Minimal placeholder while message loads -->
-				</div>
+				<div style="min-height: 3rem;" />
 			</svelte:fragment>
 		</LazyLoad>
 	{/if}

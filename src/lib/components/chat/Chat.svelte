@@ -111,11 +111,10 @@
 	let autoScroll = true;
 	let processing = '';
 	let messagesContainerElement: HTMLDivElement;
-
+	
 	// Store scroll position per chat
 	let chatScrollPositions = {};
 	let lastChatId = null;
-	let scrollRestorationObserver: ResizeObserver | null = null;
 
 	type StreamStats = {
 		lastAt: number;
@@ -251,11 +250,6 @@
 	const navigateHandler = async () => {
 		loading = true;
 
-		// Save current chat's scroll position before switching
-		if (lastChatId && messagesContainerElement) {
-			chatScrollPositions[lastChatId] = messagesContainerElement.scrollTop;
-		}
-
 		prompt = '';
 		messageInput?.setText('');
 
@@ -276,47 +270,14 @@
 			// Restore saved scroll position or scroll to bottom for new/unvisited chats
 			const savedPosition = chatScrollPositions[chatIdProp];
 			if (savedPosition !== undefined) {
-				// Clean up previous observer if exists
-				if (scrollRestorationObserver) {
-					scrollRestorationObserver.disconnect();
-					scrollRestorationObserver = null;
-				}
-
-				// Use ResizeObserver to wait for lazy-loaded content to render
-				let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
-				let lastHeight = 0;
-
-				scrollRestorationObserver = new ResizeObserver(() => {
-					if (!messagesContainerElement) return;
-
-					const currentHeight = messagesContainerElement.scrollHeight;
-
-					// Clear previous timeout
-					if (resizeTimeout) {
-						clearTimeout(resizeTimeout);
-					}
-
-					// Wait for height to stabilize (no changes for 100ms)
-					resizeTimeout = setTimeout(() => {
-						if (messagesContainerElement && Math.abs(currentHeight - lastHeight) < 10) {
-							// Height has stabilized, restore scroll position
+				// Use multiple requestAnimationFrame to ensure DOM is fully rendered
+				requestAnimationFrame(() => {
+					requestAnimationFrame(() => {
+						if (messagesContainerElement) {
 							messagesContainerElement.scrollTop = savedPosition;
-
-							// Clean up observer
-							if (scrollRestorationObserver) {
-								scrollRestorationObserver.disconnect();
-								scrollRestorationObserver = null;
-							}
 						}
-						lastHeight = currentHeight;
-					}, 100);
+					});
 				});
-
-				if (messagesContainerElement) {
-					scrollRestorationObserver.observe(messagesContainerElement);
-					// Also set initial position immediately
-					messagesContainerElement.scrollTop = savedPosition;
-				}
 			} else {
 				requestAnimationFrame(() => scrollToBottom());
 			}
