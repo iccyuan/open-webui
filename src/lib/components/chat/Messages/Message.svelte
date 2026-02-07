@@ -11,6 +11,7 @@
 	import MultiResponseMessages from './MultiResponseMessages.svelte';
 	import ResponseMessage from './ResponseMessage.svelte';
 	import UserMessage from './UserMessage.svelte';
+	import LazyLoad from '$lib/components/common/LazyLoad.svelte';
 
 	export let chatId;
 	export let selectedModels = [];
@@ -52,62 +53,40 @@
 		: 'max-w-5xl'} mx-auto rounded-lg group"
 >
 	{#if history.messages[messageId]}
-		{#if history.messages[messageId].role === 'user'}
-			<UserMessage
-				{user}
-				{chatId}
-				{history}
-				{messageId}
-				isFirstMessage={idx === 0}
-				siblings={history.messages[messageId].parentId !== null
-					? (history.messages[history.messages[messageId].parentId]?.childrenIds ?? [])
-					: (Object.values(history.messages)
-							.filter((message) => message.parentId === null)
-							.map((message) => message.id) ?? [])}
-				{gotoMessage}
-				{showPreviousMessage}
-				{showNextMessage}
-				{editMessage}
-				{deleteMessage}
-				{readOnly}
-				{editCodeBlock}
-				{topPadding}
-			/>
-		{:else if (history.messages[history.messages[messageId].parentId]?.models?.length ?? 1) === 1}
-			<ResponseMessage
-				{chatId}
-				{history}
-				{messageId}
-				{selectedModels}
-				isLastMessage={messageId === history.currentId}
-				siblings={history.messages[history.messages[messageId].parentId]?.childrenIds ?? []}
-				{setInputText}
-				{gotoMessage}
-				{showPreviousMessage}
-				{showNextMessage}
-				{updateChat}
-				{editMessage}
-				{saveMessage}
-				{rateMessage}
-				{actionMessage}
-				{submitMessage}
-				{deleteMessage}
-				{continueResponse}
-				{regenerateResponse}
-				{addMessages}
-				{readOnly}
-				{editCodeBlock}
-				{topPadding}
-			/>
-		{:else}
-			{#key messageId}
-				<MultiResponseMessages
-					bind:history
+		<LazyLoad className="w-full" threshold={0.05} rootMargin="200px">
+			{#if history.messages[messageId].role === 'user'}
+				<UserMessage
+					{user}
 					{chatId}
+					{history}
+					{messageId}
+					isFirstMessage={idx === 0}
+					siblings={history.messages[messageId].parentId !== null
+						? (history.messages[history.messages[messageId].parentId]?.childrenIds ?? [])
+						: (Object.values(history.messages)
+								.filter((message) => message.parentId === null)
+								.map((message) => message.id) ?? [])}
+					{gotoMessage}
+					{showPreviousMessage}
+					{showNextMessage}
+					{editMessage}
+					{deleteMessage}
+					{readOnly}
+					{editCodeBlock}
+					{topPadding}
+				/>
+			{:else if (history.messages[history.messages[messageId].parentId]?.models?.length ?? 1) === 1}
+				<ResponseMessage
+					{chatId}
+					{history}
 					{messageId}
 					{selectedModels}
-					isLastMessage={messageId === history?.currentId}
+					isLastMessage={messageId === history.currentId}
+					siblings={history.messages[history.messages[messageId].parentId]?.childrenIds ?? []}
 					{setInputText}
+					{gotoMessage}
+					{showPreviousMessage}
+					{showNextMessage}
 					{updateChat}
 					{editMessage}
 					{saveMessage}
@@ -117,14 +96,43 @@
 					{deleteMessage}
 					{continueResponse}
 					{regenerateResponse}
-					{mergeResponses}
-					{triggerScroll}
 					{addMessages}
 					{readOnly}
 					{editCodeBlock}
 					{topPadding}
 				/>
-			{/key}
-		{/if}
+			{:else}
+				{#key messageId}
+					<MultiResponseMessages
+						bind:history
+						{chatId}
+						{messageId}
+						{selectedModels}
+						isLastMessage={messageId === history?.currentId}
+						{setInputText}
+						{updateChat}
+						{editMessage}
+						{saveMessage}
+						{rateMessage}
+						{actionMessage}
+						{submitMessage}
+						{deleteMessage}
+						{continueResponse}
+						{regenerateResponse}
+						{mergeResponses}
+						{triggerScroll}
+						{addMessages}
+						{readOnly}
+						{editCodeBlock}
+						{topPadding}
+					/>
+				{/key}
+			{/if}
+			<svelte:fragment slot="placeholder">
+				<div class="min-h-12 opacity-30">
+					<!-- Minimal placeholder while message loads -->
+				</div>
+			</svelte:fragment>
+		</LazyLoad>
 	{/if}
 </div>

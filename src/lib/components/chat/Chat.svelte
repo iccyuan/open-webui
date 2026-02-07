@@ -111,6 +111,10 @@
 	let autoScroll = true;
 	let processing = '';
 	let messagesContainerElement: HTMLDivElement;
+	
+	// Store scroll position per chat
+	let chatScrollPositions = {};
+	let lastChatId = null;
 
 	type StreamStats = {
 		lastAt: number;
@@ -246,6 +250,11 @@
 	const navigateHandler = async () => {
 		loading = true;
 
+		// Save current chat's scroll position before switching
+		if (lastChatId && messagesContainerElement) {
+			chatScrollPositions[lastChatId] = messagesContainerElement.scrollTop;
+		}
+
 		prompt = '';
 		messageInput?.setText('');
 
@@ -262,7 +271,20 @@
 		if (chatIdProp && (await loadChat())) {
 			await tick();
 			loading = false;
-			window.setTimeout(() => scrollToBottom(), 0);
+			
+			// Restore saved scroll position or scroll to bottom for new/unvisited chats
+			const savedPosition = chatScrollPositions[chatIdProp];
+			if (savedPosition !== undefined) {
+				window.setTimeout(() => {
+					if (messagesContainerElement) {
+						messagesContainerElement.scrollTop = savedPosition;
+					}
+				}, 50);
+			} else {
+				window.setTimeout(() => scrollToBottom(), 0);
+			}
+			
+			lastChatId = chatIdProp;
 
 			await tick();
 

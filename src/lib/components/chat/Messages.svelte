@@ -60,13 +60,16 @@
 	export let messagesCount: number | null = 20;
 	let messagesLoading = false;
 
+	const MAX_MESSAGES_LIMIT = 100;
+
 	const loadMoreMessages = async () => {
 		// scroll slightly down to disable continuous loading
 		const element = document.getElementById('messages-container');
 		element.scrollTop = element.scrollTop + 100;
 
 		messagesLoading = true;
-		messagesCount += 20;
+		// Add max limit to prevent unbounded DOM growth
+		messagesCount = Math.min((messagesCount ?? 20) + 20, MAX_MESSAGES_LIMIT);
 
 		await tick();
 
