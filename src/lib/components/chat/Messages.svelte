@@ -57,7 +57,7 @@
 
 	export let onSelect = (e) => {};
 
-	export let messagesCount: number | null = 20;
+	export let messagesCount: number | null = 5;
 	let messagesLoading = false;
 
 	const loadMoreMessages = async () => {

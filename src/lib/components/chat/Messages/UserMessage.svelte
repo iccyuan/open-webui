@@ -52,13 +52,9 @@
 	let messageEditTextAreaElement: HTMLTextAreaElement;
 
 	let message = JSON.parse(JSON.stringify(history.messages[messageId]));
-	let lastMessageRef = history.messages[messageId];
-	
-	$: if (history.messages && history.messages[messageId]) {
-		// Use reference check instead of expensive JSON.stringify
-		if (lastMessageRef !== history.messages[messageId]) {
+	$: if (history.messages) {
+		if (JSON.stringify(message) !== JSON.stringify(history.messages[messageId])) {
 			message = JSON.parse(JSON.stringify(history.messages[messageId]));
-			lastMessageRef = history.messages[messageId];
 		}
 	}
 
