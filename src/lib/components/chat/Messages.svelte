@@ -9,7 +9,7 @@
 		currentChatPage,
 		temporaryChatEnabled
 	} from '$lib/stores';
-	import { tick, getContext, onMount, createEventDispatcher } from 'svelte';
+	import { tick, getContext, onMount, onDestroy, createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
 	import { toast } from 'svelte-sonner';
@@ -57,33 +57,75 @@
 
 	export let onSelect = (e) => {};
 
-	export let messagesCount: number | null = 5;
+	export let messagesCount: number | null = 1;
 	let messagesLoading = false;
 
+	// --- Anti-loop: distinguish programmatic scroll from user scroll ---
+	// After loadMoreMessages sets scrollTop programmatically, `loadCooldown`
+	// is set to true so the Loader's setInterval (fires every 100ms while
+	// visible) cannot immediately re-trigger another load.  The cooldown is
+	// only cleared when the *user* initiates a real scroll gesture (wheel /
+	// touch / pointerdown), making preloading feel instant for the user
+	// while still blocking the programmatic feedback loop.
+	let loadCooldown = false;
+	let scrollListenerCleanup: (() => void) | null = null;
+
+	onMount(() => {
+		const container = document.getElementById('messages-container');
+		if (!container) return;
+
+		const resetCooldown = () => {
+			if (loadCooldown) {
+				loadCooldown = false;
+			}
+		};
+
+		// These events only fire on real user interaction, never on
+		// programmatic scrollTop assignment.
+		container.addEventListener('wheel', resetCooldown, { passive: true });
+		container.addEventListener('touchstart', resetCooldown, { passive: true });
+		container.addEventListener('pointerdown', resetCooldown, { passive: true });
+
+		scrollListenerCleanup = () => {
+			container.removeEventListener('wheel', resetCooldown);
+			container.removeEventListener('touchstart', resetCooldown);
+			container.removeEventListener('pointerdown', resetCooldown);
+		};
+	});
+
+	onDestroy(() => {
+		scrollListenerCleanup?.();
+	});
+
 	const loadMoreMessages = async () => {
-		if (messagesLoading) return;
+		if (messagesLoading || loadCooldown) return;
 
 		const element = document.getElementById('messages-container');
 
-		// Record current scroll state before loading
-		const previousScrollHeight = element.scrollHeight;
-		const previousScrollTop = element.scrollTop;
+		// Disable autoScroll during preloading to prevent scrollToBottom from firing.
+		autoScroll = false;
 
 		messagesLoading = true;
-		messagesCount += 20;
-
+		messagesCount += 1;
 		await tick();
 
-		// Restore scroll position to maintain visual continuity
-		// The new content is added at the top, so we need to adjust scrollTop
-		const newScrollHeight = element.scrollHeight;
-		const heightDifference = newScrollHeight - previousScrollHeight;
-
-		if (heightDifference > 0) {
-			element.scrollTop = previousScrollTop + heightDifference;
+		// Scroll so the first user message sits just below the navbar.
+		// The navbar overlaps the messages container via -mb-12, so we
+		// need to offset by the navbar's full rendered height.
+		const userMessages = element.querySelectorAll('[data-role="user"]');
+		if (userMessages.length > 0) {
+			const containerRect = element.getBoundingClientRect();
+			const msgRect = userMessages[0].getBoundingClientRect();
+			const msgScrollTop = msgRect.top - containerRect.top + element.scrollTop;
+			const navbar = document.querySelector('.sticky.top-0');
+			const navbarHeight = navbar ? navbar.offsetHeight : 0;
+			element.scrollTop = Math.max(0, msgScrollTop - navbarHeight - 4);
 		}
 
 		messagesLoading = false;
+
+		// Block re-entry until the next real user scroll gesture.
+		loadCooldown = true;
 	};
 
 	$: if (history.currentId) {
@@ -434,17 +476,20 @@
 					<h2 class="sr-only" id="chat-conversation">{$i18n.t('Chat Conversation')}</h2>
 					{#if messages.at(0)?.parentId !== null}
 						<Loader
-							rootMargin="800px 0px 0px 0px"
+							rootMargin="100% 0px 0px 0px"
 							threshold={0}
 							on:visible={(e) => {
-								if (!messagesLoading) {
-									loadMoreMessages();
-								}
+								loadMoreMessages();
 							}}
 						>
-							<div class="w-full flex justify-center py-1 text-xs animate-pulse items-center gap-2">
-								<Spinner className=" size-4" />
-								<div class=" ">{$i18n.t('Loading...')}</div>
+							<!-- Minimal loading indicator with fixed height -->
+							<div
+								class="w-full flex justify-center items-center gap-2 transition-opacity duration-300"
+								style="height: 2rem; opacity: {messagesLoading ? '0.5' : '0'};"
+								aria-hidden="true"
+							>
+								<Spinner className="size-3" />
+								<span class="text-xs">{$i18n.t('Loading...')}</span>
 							</div>
 						</Loader>
 					{/if}
