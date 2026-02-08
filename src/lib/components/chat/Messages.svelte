@@ -60,6 +60,12 @@
 	export let messagesCount: number | null = 1;
 	let messagesLoading = false;
 
+	// Reset messagesCount when chatId changes so each chat starts fresh.
+	$: if (chatId) {
+		messagesCount = 1;
+		loadCooldown = false;
+	}
+
 	// --- Anti-loop: distinguish programmatic scroll from user scroll ---
 	// After loadMoreMessages sets scrollTop programmatically, `loadCooldown`
 	// is set to true so the Loader's setInterval (fires every 100ms while
@@ -101,6 +107,7 @@
 		if (messagesLoading || loadCooldown) return;
 
 		const element = document.getElementById('messages-container');
+		const wasAtBottom = autoScroll;
 
 		// Disable autoScroll during preloading to prevent scrollToBottom from firing.
 		autoScroll = false;
@@ -109,23 +116,31 @@
 		messagesCount += 1;
 		await tick();
 
-		// Scroll so the first user message sits just below the navbar.
-		// The navbar overlaps the messages container via -mb-12, so we
-		// need to offset by the navbar's full rendered height.
-		const userMessages = element.querySelectorAll('[data-role="user"]');
-		if (userMessages.length > 0) {
-			const containerRect = element.getBoundingClientRect();
-			const msgRect = userMessages[0].getBoundingClientRect();
-			const msgScrollTop = msgRect.top - containerRect.top + element.scrollTop;
-			const navbar = document.querySelector('.sticky.top-0');
-			const navbarHeight = navbar ? navbar.offsetHeight : 0;
-			element.scrollTop = Math.max(0, msgScrollTop - navbarHeight - 4);
+		if (wasAtBottom) {
+			// User was at the bottom (e.g. just entered the chat) — stay at bottom.
+			element.scrollTop = element.scrollHeight;
+			// Restore autoScroll so subsequent preload cycles know we're still at bottom.
+			autoScroll = true;
+			// Don't set loadCooldown — allow continued preloading until all
+			// messages are loaded or the Loader scrolls out of view.
+		} else {
+			// Scroll so the first user message sits just below the navbar.
+			// The navbar overlaps the messages container via -mb-12, so we
+			// need to offset by the navbar's full rendered height.
+			const userMessages = element.querySelectorAll('[data-role="user"]');
+			if (userMessages.length > 0) {
+				const containerRect = element.getBoundingClientRect();
+				const msgRect = userMessages[0].getBoundingClientRect();
+				const msgScrollTop = msgRect.top - containerRect.top + element.scrollTop;
+				const navbar = document.querySelector('.sticky.top-0');
+				const navbarHeight = navbar ? navbar.offsetHeight : 0;
+				element.scrollTop = Math.max(0, msgScrollTop - navbarHeight - 4);
+			}
+			// Block re-entry until the next real user scroll gesture.
+			loadCooldown = true;
 		}
 
 		messagesLoading = false;
-
-		// Block re-entry until the next real user scroll gesture.
-		loadCooldown = true;
 	};
 
 	$: if (history.currentId) {

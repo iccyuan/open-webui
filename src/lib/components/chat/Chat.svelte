@@ -111,10 +111,43 @@
 	let autoScroll = true;
 	let processing = '';
 	let messagesContainerElement: HTMLDivElement;
-	
+
 	// Store scroll position per chat
 	let chatScrollPositions = {};
 	let lastChatId = null;
+
+	// MutationObserver to keep scroll pinned to bottom while content renders
+	let scrollObserver: MutationObserver | null = null;
+	let scrollObserverTimer: ReturnType<typeof setTimeout> | null = null;
+
+	const startScrollObserver = () => {
+		stopScrollObserver();
+		if (!messagesContainerElement) return;
+
+		scrollObserver = new MutationObserver(() => {
+			if (autoScroll && messagesContainerElement) {
+				messagesContainerElement.scrollTop = messagesContainerElement.scrollHeight;
+			}
+		});
+		scrollObserver.observe(messagesContainerElement, {
+			childList: true,
+			subtree: true,
+			attributes: false,
+			characterData: false
+		});
+
+		// Auto-stop after 3s — by then all LazyLoad content should have rendered
+		scrollObserverTimer = setTimeout(() => stopScrollObserver(), 3000);
+	};
+
+	const stopScrollObserver = () => {
+		scrollObserver?.disconnect();
+		scrollObserver = null;
+		if (scrollObserverTimer) {
+			clearTimeout(scrollObserverTimer);
+			scrollObserverTimer = null;
+		}
+	};
 
 	type StreamStats = {
 		lastAt: number;
@@ -279,7 +312,13 @@
 					});
 				});
 			} else {
-				requestAnimationFrame(() => scrollToBottom());
+				// Ensure autoScroll stays true so preloading keeps us at bottom
+				autoScroll = true;
+				await tick();
+				scrollToBottom();
+				// Watch for DOM mutations (LazyLoad content mounting) and keep
+				// scrolling to bottom until rendering stabilizes.
+				startScrollObserver();
 			}
 
 			lastChatId = chatIdProp;
@@ -750,6 +789,8 @@
 				scrollRestorationObserver.disconnect();
 				scrollRestorationObserver = null;
 			}
+
+			stopScrollObserver();
 		} catch (e) {
 			console.error(e);
 		}
@@ -2622,6 +2663,9 @@
 									autoScroll =
 										messagesContainerElement.scrollHeight - messagesContainerElement.scrollTop <=
 										messagesContainerElement.clientHeight + 5;
+									if (!autoScroll && scrollObserver) {
+										stopScrollObserver();
+									}
 								}}
 							>
 								<div class=" h-full w-full flex flex-col">
