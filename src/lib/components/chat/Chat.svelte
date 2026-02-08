@@ -1256,6 +1256,7 @@
 			});
 		}
 	};
+
 	const chatCompletedHandler = async (_chatId, modelId, responseMessageId, messages) => {
 		const res = await chatCompleted(localStorage.token, {
 			model: modelId,

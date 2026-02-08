@@ -49,6 +49,8 @@
 
 <div
 	role="listitem"
+	id="message-{messageId}"
+	data-role={history.messages[messageId]?.role}
 	class="flex flex-col justify-between px-5 mb-1.5 w-full {($settings?.widescreenMode ?? null)
 		? 'max-w-full'
 		: 'max-w-5xl'} mx-auto rounded-lg group"
