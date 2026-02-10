@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { flyAndScale } from '$lib/utils/transitions';
+	import { flyAndScale, appleSpring } from '$lib/utils/transitions';
 	import { fade, fly, slide } from 'svelte/transition';
 
 	export let show = false;
@@ -57,7 +57,8 @@
 	<div
 		bind:this={modalElement}
 		class="modal fixed right-0 bottom-0 left-0 z-999 flex h-screen max-h-[100dvh] w-full justify-center overflow-hidden overscroll-contain bg-black/60"
-		in:fly={{ y: 100, duration: 100 }}
+		in:fly={{ y: 100, duration: 350, easing: appleSpring }}
+		out:fly={{ y: 100, duration: 250 }}
 		on:mousedown={() => {
 			show = false;
 		}}

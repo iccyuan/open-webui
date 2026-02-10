@@ -6,7 +6,7 @@
 	export let width = '200px';
 
 	export let className = '';
-	export let duration = 100;
+	export let duration = 200;
 </script>
 
 {#if show}
@@ -21,7 +21,7 @@
 
 	<div
 		class="absolute z-30 shadow-xl {side === 'right' ? 'right-0' : 'left-0'} top-0 bottom-0"
-		transition:slide={{ duration: duration, axis: side === 'right' ? 'x' : 'y' }}
+		transition:slide={{ duration: 250, axis: side === 'right' ? 'x' : 'y' }}
 	>
 		<div class="{className} h-full" style="width: {show ? width : '0px'}">
 			<slot />

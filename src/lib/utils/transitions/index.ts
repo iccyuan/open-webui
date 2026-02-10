@@ -1,4 +1,3 @@
-import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 
 type FlyAndScaleParams = {
@@ -7,7 +6,14 @@ type FlyAndScaleParams = {
 	duration?: number;
 };
 
-const defaultFlyAndScaleParams = { y: -8, start: 0.95, duration: 200 };
+// Apple-style spring easing: gentle overshoot then settle
+export const appleSpring = (t: number): number => {
+	const s = 1.2;
+	const t1 = t - 1;
+	return t1 * t1 * ((s + 1) * t1 + s) + 1;
+};
+
+const defaultFlyAndScaleParams = { y: -6, start: 0.97, duration: 300 };
 
 export const flyAndScale = (node: Element, params?: FlyAndScaleParams): TransitionConfig => {
 	const style = getComputedStyle(node);
@@ -32,7 +38,7 @@ export const flyAndScale = (node: Element, params?: FlyAndScaleParams): Transiti
 	};
 
 	return {
-		duration: withDefaults.duration ?? 200,
+		duration: withDefaults.duration ?? 300,
 		delay: 0,
 		css: (t) => {
 			const y = scaleConversion(t, [0, 1], [withDefaults.y, 0]);
@@ -40,9 +46,9 @@ export const flyAndScale = (node: Element, params?: FlyAndScaleParams): Transiti
 
 			return styleToString({
 				transform: `${transform} translate3d(0, ${y}px, 0) scale(${scale})`,
-				opacity: t
+				opacity: Math.min(1, t * 1.5)
 			});
 		},
-		easing: cubicOut
+		easing: appleSpring
 	};
 };
