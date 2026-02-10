@@ -383,7 +383,15 @@ input[type='number'] {
 }
 
 .tippy-box[data-theme~='dark'] {
-	@apply rounded-lg bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-200 text-xs border border-gray-200 dark:border-gray-900 shadow-xl;
+	@apply rounded-lg text-gray-900 dark:text-gray-200 text-xs
+		border border-gray-200/60 dark:border-gray-700/60
+		shadow-xl bg-white/70 dark:bg-gray-950/70
+		backdrop-blur-xl;
+}
+
+[data-menu-content] {
+	backdrop-filter: blur(16px) saturate(180%);
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 .password {
