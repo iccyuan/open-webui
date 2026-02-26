@@ -112,6 +112,38 @@
 		// Disable autoScroll during preloading to prevent scrollToBottom from firing.
 		autoScroll = false;
 
+		// --- Capture scroll anchor BEFORE loading new messages ---
+		// Find the navbar height for offset calculation.
+		const navbar = document.querySelector('.sticky.top-0');
+		const navbarHeight = navbar ? (navbar as HTMLElement).offsetHeight : 0;
+
+		// Find the user message element that is currently closest to (but below)
+		// the navbar bottom edge. This is the anchor we want to keep visible after
+		// the new (older) messages are prepended to the DOM.
+		let anchorEl: Element | null = null;
+		let anchorOffsetInContainer = 0; // scrollTop value at which anchor's top == navbarBottom
+		if (!wasAtBottom) {
+			const containerRect = element.getBoundingClientRect();
+			const navbarBottom = containerRect.top + navbarHeight;
+			const userMessages = element.querySelectorAll('[data-role="user"]');
+			for (const msg of Array.from(userMessages)) {
+				const rect = msg.getBoundingClientRect();
+				// Pick the first user message whose top is at or below the navbar bottom.
+				if (rect.top >= navbarBottom - 4) {
+					anchorEl = msg;
+					// Distance from container top to msg top (in scroll coordinates)
+					anchorOffsetInContainer = rect.top - containerRect.top + element.scrollTop;
+					break;
+				}
+			}
+			// Fallback: use the very first user message if none is below navbar.
+			if (!anchorEl && userMessages.length > 0) {
+				const rect = userMessages[0].getBoundingClientRect();
+				anchorEl = userMessages[0];
+				anchorOffsetInContainer = rect.top - containerRect.top + element.scrollTop;
+			}
+		}
+
 		messagesLoading = true;
 		messagesCount += 1;
 		await tick();
@@ -123,20 +155,16 @@
 			autoScroll = true;
 			// Don't set loadCooldown — allow continued preloading until all
 			// messages are loaded or the Loader scrolls out of view.
-		} else {
-			// Scroll so the first user message sits just below the navbar.
-			// The navbar overlaps the messages container via -mb-12, so we
-			// need to offset by the navbar's full rendered height.
-			const userMessages = element.querySelectorAll('[data-role="user"]');
-			if (userMessages.length > 0) {
-				const containerRect = element.getBoundingClientRect();
-				const msgRect = userMessages[0].getBoundingClientRect();
-				const msgScrollTop = msgRect.top - containerRect.top + element.scrollTop;
-				const navbar = document.querySelector('.sticky.top-0');
-				const navbarHeight = navbar ? navbar.offsetHeight : 0;
-				element.scrollTop = Math.max(0, msgScrollTop - navbarHeight - 4);
-			}
+		} else if (anchorEl) {
+			// After new messages are prepended, re-measure the anchor element's
+			// new position and set scrollTop so it sits just below the navbar.
+			const containerRect = element.getBoundingClientRect();
+			const newRect = anchorEl.getBoundingClientRect();
+			const newOffsetInContainer = newRect.top - containerRect.top + element.scrollTop;
+			element.scrollTop = Math.max(0, newOffsetInContainer - navbarHeight - 4);
 			// Block re-entry until the next real user scroll gesture.
+			loadCooldown = true;
+		} else {
 			loadCooldown = true;
 		}
 
