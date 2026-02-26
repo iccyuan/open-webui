@@ -511,13 +511,13 @@
 			</div>
 
 			<div
-				class="language-{lang} rounded-t-xl -mt-9 {editorClassName
+				class="language-{lang} rounded-t-xl -mt-10 {editorClassName
 					? editorClassName
 					: executing || stdout || stderr || result
 						? ''
 						: 'rounded-b-xl'} overflow-hidden"
 			>
-				<div class=" pt-9 bg-white dark:bg-black"></div>
+				<div class=" pt-10 bg-white dark:bg-black"></div>
 
 				{#if !collapsed}
 					{#if edit}
