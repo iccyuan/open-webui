@@ -37,6 +37,149 @@
 	export let preview = false;
 	export let collapsed = false;
 
+	// Maps language identifiers → Simple Icons slug
+	// See https://simpleicons.org for available slugs
+	const LANG_ICON_MAP: Record<string, string> = {
+		// Web
+		javascript: 'javascript',
+		js: 'javascript',
+		typescript: 'typescript',
+		ts: 'typescript',
+		html: 'html5',
+		css: 'css3',
+		scss: 'sass',
+		sass: 'sass',
+		less: 'less',
+		vue: 'vuedotjs',
+		svelte: 'svelte',
+		react: 'react',
+		jsx: 'react',
+		tsx: 'react',
+		angular: 'angular',
+		graphql: 'graphql',
+		webassembly: 'webassembly',
+		wasm: 'webassembly',
+		// Systems
+		python: 'python',
+		py: 'python',
+		javac: 'java',
+		java: 'java',
+		kotlin: 'kotlin',
+		kt: 'kotlin',
+		swift: 'swift',
+		go: 'go',
+		golang: 'go',
+		rust: 'rust',
+		rs: 'rust',
+		c: 'c',
+		cpp: 'cplusplus',
+		'c++': 'cplusplus',
+		csharp: 'csharp',
+		cs: 'csharp',
+		fsharp: 'fsharp',
+		fs: 'fsharp',
+		scala: 'scala',
+		groovy: 'apachegroovy',
+		clojure: 'clojure',
+		elixir: 'elixir',
+		erlang: 'erlang',
+		haskell: 'haskell',
+		ocaml: 'ocaml',
+		luau: 'robloxstudio',
+		lua: 'lua',
+		perl: 'perl',
+		php: 'php',
+		ruby: 'ruby',
+		rb: 'ruby',
+		r: 'r',
+		matlab: 'mathworks',
+		dart: 'dart',
+		nim: 'nim',
+		zig: 'zig',
+		crystal: 'crystal',
+		julia: 'julia',
+		// Build tools
+		gradle: 'gradle',
+		'gradle.kts': 'gradle',
+		maven: 'apachemaven',
+		cmake: 'cmake',
+		makefile: 'cmake',
+		make: 'cmake',
+		bazel: 'bazel',
+		nix: 'nixos',
+		// Shell / DevOps
+		bash: 'gnubash',
+		sh: 'gnubash',
+		shell: 'gnubash',
+		zsh: 'gnubash',
+		fish: 'fish',
+		powershell: 'powershell',
+		ps1: 'powershell',
+		docker: 'docker',
+		dockerfile: 'docker',
+		nginx: 'nginx',
+		apache: 'apache',
+		kubernetes: 'kubernetes',
+		k8s: 'kubernetes',
+		helm: 'helm',
+		terraform: 'terraform',
+		ansible: 'ansible',
+		vagrant: 'vagrant',
+		// Runtime / Pkg managers
+		nodejs: 'nodedotjs',
+		node: 'nodedotjs',
+		npm: 'npm',
+		yarn: 'yarn',
+		pnpm: 'pnpm',
+		deno: 'deno',
+		bun: 'bun',
+		// Data / DB
+		sql: 'postgresql',
+		mysql: 'mysql',
+		postgresql: 'postgresql',
+		postgres: 'postgresql',
+		sqlite: 'sqlite',
+		mongodb: 'mongodb',
+		redis: 'redis',
+		elasticsearch: 'elasticsearch',
+		neo4j: 'neo4j',
+		cassandra: 'apachecassandra',
+		// Cloud / Platforms
+		firebase: 'firebase',
+		supabase: 'supabase',
+		// Testing / Bundlers / Tools
+		jest: 'jest',
+		vitest: 'vitest',
+		mocha: 'mocha',
+		webpack: 'webpack',
+		vite: 'vite',
+		rollup: 'rollup',
+		eslint: 'eslint',
+		prettier: 'prettier',
+		// Config / Markup
+		yaml: 'yaml',
+		yml: 'yaml',
+		toml: 'toml',
+		json: 'json',
+		markdown: 'markdown',
+		md: 'markdown',
+		latex: 'latex',
+		tex: 'latex',
+		xml: 'xml',
+		// Notebooks / Special
+		jupyter: 'jupyter',
+		solidity: 'solidity',
+		sol: 'solidity',
+		mermaid: 'mermaid',
+		vega: 'vega'
+	};
+
+	const getLanguageIcon = (language: string): string | null => {
+		if (!language) return null;
+		const slug = LANG_ICON_MAP[language.toLowerCase()];
+		return slug ? `https://cdn.simpleicons.org/${slug}` : null;
+	};
+
 	export let token;
 	export let lang = '';
 	export let code = '';
@@ -443,8 +586,18 @@
 			<div
 				class="sticky {stickyButtonsClassName} left-0 right-0 py-2 pl-4.5 pr-3 flex items-center justify-between w-full z-30 text-xs text-black dark:text-white rounded-t-xl bg-gray-50 dark:bg-gray-900"
 			>
-				<div class="text-gray-700 dark:text-gray-400 text-xs font-medium pointer-events-none">
-					{lang}
+				<div
+					class="flex items-center gap-1.5 text-gray-700 dark:text-gray-400 text-xs font-medium pointer-events-none"
+				>
+					{#if getLanguageIcon(lang)}
+						<img
+							src={getLanguageIcon(lang)}
+							alt="{lang} logo"
+							class="size-3.5 dark:invert opacity-60"
+							loading="lazy"
+						/>
+					{/if}
+					{lang ? lang.charAt(0).toUpperCase() + lang.slice(1) : ''}
 				</div>
 				<div class="flex items-center gap-0.5">
 					<button
