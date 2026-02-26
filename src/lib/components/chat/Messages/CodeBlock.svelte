@@ -517,7 +517,7 @@
 						? ''
 						: 'rounded-b-xl'} overflow-hidden"
 			>
-				<div class=" pt-6.5 bg-white dark:bg-black"></div>
+				<div class=" pt-9 bg-white dark:bg-black"></div>
 
 				{#if !collapsed}
 					{#if edit}
