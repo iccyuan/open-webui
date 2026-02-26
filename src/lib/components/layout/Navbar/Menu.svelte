@@ -285,7 +285,7 @@
 			align="end"
 			transition={flyAndScale}
 		>
-			<!-- <DropdownMenu.Item
+			<!-- <DropdownMenu.Item draggable="false"
 				class="flex gap-2 items-center px-3 py-1.5 text-sm  cursor-pointer dark:hover:bg-gray-800 rounded-xl"
 				on:click={async () => {
 					await showSettings.set(!$showSettings);
@@ -315,6 +315,7 @@
 
 			{#if $mobile && ($user?.role === 'admin' || ($user?.permissions.chat?.controls ?? true))}
 				<DropdownMenu.Item
+					draggable="false"
 					class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 					id="chat-controls-button"
 					on:click={async () => {
@@ -330,6 +331,7 @@
 			{/if}
 
 			<DropdownMenu.Item
+				draggable="false"
 				class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 				id="chat-overview-button"
 				on:click={async () => {
@@ -345,6 +347,7 @@
 
 			{#if ($artifactContents ?? []).length > 0}
 				<DropdownMenu.Item
+					draggable="false"
 					class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 					id="chat-overview-button"
 					on:click={async () => {
@@ -363,6 +366,7 @@
 
 			{#if !$temporaryChatEnabled && ($user?.role === 'admin' || ($user.permissions?.chat?.share ?? true))}
 				<DropdownMenu.Item
+					draggable="false"
 					class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 					id="chat-share-button"
 					on:click={() => {
@@ -376,6 +380,7 @@
 
 			<DropdownMenu.Sub>
 				<DropdownMenu.SubTrigger
+					draggable="false"
 					class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 				>
 					<Download strokeWidth="1.5" />
@@ -389,6 +394,7 @@
 				>
 					{#if $user?.role === 'admin' || ($user.permissions?.chat?.export ?? true)}
 						<DropdownMenu.Item
+							draggable="false"
 							class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 							on:click={() => {
 								downloadJSONExport();
@@ -398,6 +404,7 @@
 						</DropdownMenu.Item>
 					{/if}
 					<DropdownMenu.Item
+						draggable="false"
 						class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 						on:click={() => {
 							downloadTxt();
@@ -407,6 +414,7 @@
 					</DropdownMenu.Item>
 
 					<DropdownMenu.Item
+						draggable="false"
 						class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 						on:click={() => {
 							downloadPdf();
@@ -418,6 +426,7 @@
 			</DropdownMenu.Sub>
 
 			<DropdownMenu.Item
+				draggable="false"
 				class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 				id="chat-copy-button"
 				on:click={async () => {
@@ -440,6 +449,7 @@
 				{#if $folders.length > 0}
 					<DropdownMenu.Sub>
 						<DropdownMenu.SubTrigger
+							draggable="false"
 							class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl select-none w-full"
 						>
 							<Folder strokeWidth="1.5" />
@@ -454,6 +464,7 @@
 							{#each $folders.sort((a, b) => b.updated_at - a.updated_at) as folder}
 								{#if folder?.id}
 									<DropdownMenu.Item
+										draggable="false"
 										class="flex gap-2 items-center px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl"
 										on:click={() => {
 											moveChatHandler(chat.id, folder.id);
@@ -470,6 +481,7 @@
 				{/if}
 
 				<DropdownMenu.Item
+					draggable="false"
 					class="flex gap-2 items-center px-3 py-1.5 text-sm  cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl"
 					on:click={() => {
 						archiveChatHandler();

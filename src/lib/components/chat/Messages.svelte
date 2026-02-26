@@ -462,12 +462,7 @@
 			delete history.messages[id];
 		});
 
-		await tick();
-
-		showMessage({ id: parentMessageId });
-
-		// Update the chat
-		await updateChat();
+		showMessage({ id: parentMessageId }, false);
 	};
 
 	const triggerScroll = () => {

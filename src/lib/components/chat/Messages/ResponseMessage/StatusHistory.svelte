@@ -35,7 +35,11 @@
 			<!-- Header -->
 			<button
 				class="flex items-center gap-1.5 w-full text-left py-0.5 group"
-				on:click={() => { showHistory = !showHistory; }}
+				aria-label={$i18n.t('Toggle status history')}
+				aria-expanded={showHistory}
+				on:click={() => {
+					showHistory = !showHistory;
+				}}
 			>
 				<!-- Chevron -->
 				<div class="text-gray-400 dark:text-gray-500 transition-transform duration-200 {showHistory ? 'rotate-90' : ''}">
