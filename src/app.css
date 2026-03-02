@@ -420,13 +420,9 @@ input[type='number'] {
 }
 
 .codespan {
-	color: #e01e5a;
-	border-width: 0px;
-	padding: 2px 6px;
+	padding: 0.15rem 0.3rem;
 	font-size: 0.85em;
-	font-weight: 500;
-	font-family: var(--font-mono) !important;
-	@apply rounded dark:bg-gray-800/80 bg-gray-100/80 mx-0.5;
+	@apply font-mono rounded-md text-gray-800 bg-gray-100 dark:text-gray-200 dark:bg-gray-800 mx-0.5;
 }
 
 .svelte-flow {
@@ -649,13 +645,9 @@ text-gray-600 from: https://tailwindcss.com/docs/color */
 }
 
 .tiptap p code {
-	color: #e01e5a;
-	border-width: 0px;
-	padding: 2px 6px;
+	padding: 0.15rem 0.3rem;
 	font-size: 0.85em;
-	font-weight: 500;
-	font-family: var(--font-mono) !important;
-	@apply rounded dark:bg-gray-800/80 bg-gray-100/80 mx-0.5;
+	@apply font-mono rounded-md text-gray-800 bg-gray-50 dark:text-gray-200 dark:bg-gray-800 mx-0.5;
 }
 
 /* Code styling - Antigravity theme */
