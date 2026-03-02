@@ -146,6 +146,7 @@
 
 		messagesLoading = true;
 		messagesCount += 1;
+		buildMessages();
 		await tick();
 
 		if (wasAtBottom) {
