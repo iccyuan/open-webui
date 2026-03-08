@@ -391,7 +391,7 @@
 				{#if localDBChats.length > 0}
 					<div class="fixed w-full h-full flex z-50">
 						<div
-							class="absolute w-full h-full backdrop-blur-md bg-white/20 dark:bg-gray-900/50 flex justify-center"
+							class="absolute w-full h-full glass-blur bg-white/40 dark:bg-gray-900/70 flex justify-center"
 						>
 							<div class="m-auto pb-44 flex flex-col justify-center">
 								<div class="max-w-md">

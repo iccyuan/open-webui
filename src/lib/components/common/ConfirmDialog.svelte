@@ -100,14 +100,14 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		bind:this={modalElement}
-		class=" fixed top-0 right-0 left-0 bottom-0 bg-black/60 w-full h-screen max-h-[100dvh] flex justify-center z-99999999 overflow-hidden overscroll-contain"
+		class=" fixed top-0 right-0 left-0 bottom-0 bg-black/30 dark:bg-black/50 glass-blur w-full h-screen max-h-[100dvh] flex justify-center z-99999999 overflow-hidden overscroll-contain"
 		in:fade={{ duration: 200 }}
 		on:mousedown={() => {
 			show = false;
 		}}
 	>
 		<div
-			class=" m-auto max-w-full w-[32rem] mx-2 bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl rounded-4xl max-h-[100dvh] shadow-3xl border border-white dark:border-gray-900"
+			class=" m-auto max-w-full w-[32rem] mx-2 glass-surface bg-white/90 dark:bg-gray-950/75 rounded-4xl max-h-[100dvh] border border-white/40 dark:border-gray-800/50"
 			in:flyAndScale
 			on:mousedown={(e) => {
 				e.stopPropagation();
