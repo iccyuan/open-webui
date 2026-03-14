@@ -38,8 +38,8 @@
 	export let preview = false;
 	export let collapsed = false;
 
-	// Maps language identifiers → Simple Icons slug
-	// See https://simpleicons.org for available slugs
+	// Maps language identifiers → Devicon icon name
+	// See https://devicon.dev for available icons
 	const LANG_ICON_MAP: Record<string, string> = {
 		// Web
 		javascript: 'javascript',
@@ -51,15 +51,15 @@
 		scss: 'sass',
 		sass: 'sass',
 		less: 'less',
-		vue: 'vuedotjs',
+		vue: 'vuejs',
 		svelte: 'svelte',
 		react: 'react',
 		jsx: 'react',
 		tsx: 'react',
-		angular: 'angular',
+		angular: 'angularjs',
 		graphql: 'graphql',
-		webassembly: 'webassembly',
-		wasm: 'webassembly',
+		webassembly: 'wasm',
+		wasm: 'wasm',
 		// Systems
 		python: 'python',
 		py: 'python',
@@ -77,43 +77,36 @@
 		'c++': 'cplusplus',
 		csharp: 'csharp',
 		cs: 'csharp',
-		fsharp: 'fsharp',
-		fs: 'fsharp',
 		scala: 'scala',
-		groovy: 'apachegroovy',
+		groovy: 'groovy',
 		clojure: 'clojure',
 		elixir: 'elixir',
 		erlang: 'erlang',
 		haskell: 'haskell',
 		ocaml: 'ocaml',
-		luau: 'robloxstudio',
 		lua: 'lua',
 		perl: 'perl',
 		php: 'php',
 		ruby: 'ruby',
 		rb: 'ruby',
 		r: 'r',
-		matlab: 'mathworks',
+		matlab: 'matlab',
 		dart: 'dart',
-		nim: 'nim',
 		zig: 'zig',
 		crystal: 'crystal',
 		julia: 'julia',
 		// Build tools
 		gradle: 'gradle',
 		'gradle.kts': 'gradle',
-		maven: 'apachemaven',
+		maven: 'maven',
 		cmake: 'cmake',
-		makefile: 'cmake',
-		make: 'cmake',
 		bazel: 'bazel',
 		nix: 'nixos',
 		// Shell / DevOps
-		bash: 'gnubash',
-		sh: 'gnubash',
-		shell: 'gnubash',
-		zsh: 'gnubash',
-		fish: 'fish',
+		bash: 'bash',
+		sh: 'bash',
+		shell: 'bash',
+		zsh: 'bash',
 		powershell: 'powershell',
 		ps1: 'powershell',
 		docker: 'docker',
@@ -125,14 +118,13 @@
 		helm: 'helm',
 		terraform: 'terraform',
 		ansible: 'ansible',
-		vagrant: 'vagrant',
 		// Runtime / Pkg managers
-		nodejs: 'nodedotjs',
-		node: 'nodedotjs',
+		nodejs: 'nodejs',
+		node: 'nodejs',
 		npm: 'npm',
 		yarn: 'yarn',
 		pnpm: 'pnpm',
-		deno: 'deno',
+		deno: 'denojs',
 		bun: 'bun',
 		// Data / DB
 		sql: 'postgresql',
@@ -144,41 +136,38 @@
 		redis: 'redis',
 		elasticsearch: 'elasticsearch',
 		neo4j: 'neo4j',
-		cassandra: 'apachecassandra',
+		cassandra: 'cassandra',
 		// Cloud / Platforms
 		firebase: 'firebase',
 		supabase: 'supabase',
 		// Testing / Bundlers / Tools
 		jest: 'jest',
-		vitest: 'vitest',
+		vitest: 'vitejs',
 		mocha: 'mocha',
 		webpack: 'webpack',
-		vite: 'vite',
+		vite: 'vitejs',
 		rollup: 'rollup',
 		eslint: 'eslint',
-		prettier: 'prettier',
 		// Config / Markup
 		yaml: 'yaml',
 		yml: 'yaml',
-		toml: 'toml',
 		json: 'json',
 		markdown: 'markdown',
 		md: 'markdown',
 		latex: 'latex',
 		tex: 'latex',
-		xml: 'xml',
 		// Notebooks / Special
 		jupyter: 'jupyter',
 		solidity: 'solidity',
-		sol: 'solidity',
-		mermaid: 'mermaid',
-		vega: 'vega'
+		sol: 'solidity'
 	};
 
 	const getLanguageIcon = (language: string): string | null => {
 		if (!language) return null;
-		const slug = LANG_ICON_MAP[language.toLowerCase()];
-		return slug ? `https://cdn.simpleicons.org/${slug}` : null;
+		const iconName = LANG_ICON_MAP[language.toLowerCase()];
+		if (!iconName) return null;
+		// Use Devicon CDN - colorful, high-quality programming language icons
+		return `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${iconName}/${iconName}-original.svg`;
 	};
 
 	export let token;
@@ -596,7 +585,7 @@
 						<img
 							src={getLanguageIcon(lang)}
 							alt="{lang} logo"
-							class="size-3.5 dark:invert opacity-60"
+							class="size-4 object-contain"
 							loading="lazy"
 						/>
 					{/if}
