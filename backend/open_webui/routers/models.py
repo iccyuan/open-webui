@@ -389,21 +389,23 @@ async def get_model_by_id(
 # Each SVG uses the provider's official brand colors so they look great
 # on both light and dark backgrounds without any external network dependency.
 PROVIDER_SVGS: dict[str, str] = {
-    "openai": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "openai": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#000"/>
 <g transform="translate(20, 20) scale(1.46)">
 <path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835A9.964 9.964 0 0 0 18.306.5a10.079 10.079 0 0 0-9.614 6.977 9.967 9.967 0 0 0-6.664 4.834 10.08 10.08 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 7.516 3.35 10.078 10.078 0 0 0 9.617-6.981 9.967 9.967 0 0 0 6.663-4.834 10.079 10.079 0 0 0-1.243-11.813zM22.498 37.886a7.474 7.474 0 0 1-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 0 0 .655-1.134V19.054l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.49 7.496zM6.392 31.006a7.471 7.471 0 0 1-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 0 0 1.308 0l9.724-5.614v3.888a.12.12 0 0 1-.048.103L16.5 33.798a7.505 7.505 0 0 1-10.108-2.792zm-2.32-17.126a7.47 7.47 0 0 1 3.91-3.293v9.206a1.294 1.294 0 0 0 .654 1.132l9.723 5.614-3.366 1.944a.12.12 0 0 1-.114.012L7.044 23.86a7.504 7.504 0 0 1-2.972-10.18zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 0 1 .114-.012l7.857 4.533a7.504 7.504 0 0 1-1.158 13.528v-9.207a1.294 1.294 0 0 0-.456-1.284zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 0 0-1.308 0l-9.723 5.614v-3.888a.12.12 0 0 1 .048-.103l7.883-4.551a7.504 7.504 0 0 1 11.3 7.669zm-21.063 6.929l-3.367-1.944a.12.12 0 0 1-.065-.092v-9.299a7.504 7.504 0 0 1 12.301-5.762 6.94 6.94 0 0 0-.236.134l-7.965 4.6a1.294 1.294 0 0 0-.654 1.132l-.014 11.231zm1.829-3.943l4.33-2.501 4.332 2.5v4.999l-4.331 2.5-4.331-2.5V19.16z" fill="white"/>
 </g>
 </svg>""",
 
-    "anthropic": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "claude": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.2 -1.2 26.4 26.4"><rect x="-1.2" y="-1.2" width="26.4" height="26.4" rx="13.2" fill="#D97757" /><path fill="white" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg>""",
+
+    "anthropic": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#D97757"/>
 <g transform="translate(18, 18) scale(2.66)">
 <path d="M13.827 5.47h2.405L21 18.53h-2.354l-1.11-2.933h-5.12l-1.11 2.933H9L13.827 5.47zm2.07 8.241-1.868-4.935-1.868 4.935h3.736zM7.44 5.47H5v13.06h2.44V5.47z" fill="white"/>
 </g>
 </svg>""",
 
-    "google": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "google": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="white"/>
 <g transform="translate(20, 20) scale(2.5)">
 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -413,33 +415,35 @@ PROVIDER_SVGS: dict[str, str] = {
 </g>
 </svg>""",
 
-    "meta": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "gemini": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.2 -1.2 26.4 26.4"><rect x="-1.2" y="-1.2" width="26.4" height="26.4" rx="13.2" fill="#1A73E8"/><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="white"/></svg>""",
+
+    "meta": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#0866FF"/>
 <g transform="translate(18, 18) scale(2.66)">
 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c2.65 0 5.06-1.03 6.84-2.71a9.96 9.96 0 0 0 6.84 2.71c5.52 0 10-4.48 10-10S31.19 2 25.67 2a9.96 9.96 0 0 0-6.83 2.7A9.95 9.95 0 0 0 12 2zm0 4.14A5.85 5.85 0 0 1 17.85 12 5.85 5.85 0 0 1 12 17.85a5.85 5.85 0 0 1-4.14-1.72A5.85 5.85 0 0 1 6.15 12a5.85 5.85 0 0 1 1.71-4.14A5.85 5.85 0 0 1 12 6.14zm13.67 0c2.25 0 4.25 1.28 5.23 3.19.06.12.1.25.13.38.29.98.49 2.03.49 3.14 0 3.23-2.61 5.85-5.85 5.85s-5.85-2.62-5.85-5.85c0-1.12.21-2.18.51-3.16.03-.11.06-.21.1-.31a5.84 5.84 0 0 1 5.24-3.24Z" fill="white"/>
 </g>
 </svg>""",
 
-    "mistral": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "mistral": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#FF7000"/>
 <g transform="translate(20, 20) scale(2.5)">
 <path d="M4 4h4v4H4V4zm6 6h4v4h-4v-4zm0 6h4v4h-4v-4zm6-6h4v4h-4v-4zm-6-6h4v4h-4v-4zm-6 6h4v4H4v-4zm12 6h4v4h-4v-4zm0-12h4v4h-4V4zM4 16h4v4H4v-4z" fill="white"/>
 </g>
 </svg>""",
 
-    "deepseek": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "deepseek": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#4D6BFE"/>
 <text x="50" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="800" text-anchor="middle" fill="white" letter-spacing="-2">DS</text>
 </svg>""",
 
-    "alibabacloud": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "alibabacloud": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#6156e5"/>
 <g transform="translate(20, 20) scale(2.5)">
 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill="white"/>
 </g>
 </svg>""",
 
-    "microsoft": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "microsoft": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="white"/>
 <g transform="translate(20, 20) scale(2.5)">
 <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
@@ -449,21 +453,26 @@ PROVIDER_SVGS: dict[str, str] = {
 </g>
 </svg>""",
 
-    "perplexity": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "copilot": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.2 -1.2 26.4 26.4">
+<circle cx="12" cy="12" r="13.2" fill="#000000"/>
+<path d="M23.922 16.997C23.061 18.492 18.063 22.02 12 22.02 5.937 22.02.939 18.492.078 16.997A.641.641 0 0 1 0 16.741v-2.869a.883.883 0 0 1 .053-.22c.372-.935 1.347-2.292 2.605-2.656.167-.429.414-1.055.644-1.517a10.098 10.098 0 0 1-.052-1.086c0-1.331.282-2.499 1.132-3.368.397-.406.89-.717 1.474-.952C7.255 2.937 9.248 1.98 11.978 1.98c2.731 0 4.767.957 6.166 2.093.584.235 1.077.546 1.474.952.85.869 1.132 2.037 1.132 3.368 0 .368-.014.733-.052 1.086.23.462.477 1.088.644 1.517 1.258.364 2.233 1.721 2.605 2.656a.841.841 0 0 1 .053.22v2.869a.641.641 0 0 1-.078.256Zm-11.75-5.992h-.344a4.359 4.359 0 0 1-.355.508c-.77.947-1.918 1.492-3.508 1.492-1.725 0-2.989-.359-3.782-1.259a2.137 2.137 0 0 1-.085-.104L4 11.746v6.585c1.435.779 4.514 2.179 8 2.179 3.486 0 6.565-1.4 8-2.179v-6.585l-.098-.104s-.033.045-.085.104c-.793.9-2.057 1.259-3.782 1.259-1.59 0-2.738-.545-3.508-1.492a4.359 4.359 0 0 1-.355-.508Zm2.328 3.25c.549 0 1 .451 1 1v2c0 .549-.451 1-1 1-.549 0-1-.451-1-1v-2c0-.549.451-1 1-1Zm-5 0c.549 0 1 .451 1 1v2c0 .549-.451 1-1 1-.549 0-1-.451-1-1v-2c0-.549.451-1 1-1Zm3.313-6.185c.136 1.057.403 1.913.878 2.497.442.544 1.134.938 2.344.938 1.573 0 2.292-.337 2.657-.751.384-.435.558-1.15.558-2.361 0-1.14-.243-1.847-.705-2.319-.477-.488-1.319-.862-2.824-1.025-1.487-.161-2.192.138-2.533.529-.269.307-.437.808-.438 1.578v.021c0 .265.021.562.063.893Zm-1.626 0c.042-.331.063-.628.063-.894v-.02c-.001-.77-.169-1.271-.438-1.578-.341-.391-1.046-.69-2.533-.529-1.505.163-2.347.537-2.824 1.025-.462.472-.705 1.179-.705 2.319 0 1.211.175 1.926.558 2.361.365.414 1.084.751 2.657.751 1.21 0 1.902-.394 2.344-.938.475-.584.742-1.44.878-2.497Z" fill="white"/>
+</svg>""",
+
+    "perplexity": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#1C1C1C"/>
 <g transform="translate(18, 18) scale(2.66)">
 <path d="M12 22a.96.96 0 0 1-.96-.96v-7.38H5.98V7.5a.96.96 0 0 1 .96-.96h10.12a.96.96 0 0 1 .96.96v6.16h-5.06v7.38a.96.96 0 0 1-.96.96h0Z" fill="white"/>
 </g>
 </svg>""",
 
-    "x": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "x": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#000"/>
 <g transform="translate(20, 20) scale(2.5)">
 <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" fill="white"/>
 </g>
 </svg>""",
 
-    "ollama": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "ollama": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#F0F0F0"/>
 <g transform="translate(15, 14) scale(2.1)">
 <ellipse cx="16.5" cy="11.5" rx="7.5" ry="7.5" fill="none" stroke="#222" stroke-width="2"/>
@@ -475,7 +484,7 @@ PROVIDER_SVGS: dict[str, str] = {
 </g>
 </svg>""",
 
-    "cohere": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    "cohere": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#FAF5F1"/>
 <g transform="translate(18, 18) scale(2.66)">
 <circle cx="12" cy="12" r="12" fill="#39594D"/>
@@ -490,27 +499,34 @@ PROVIDER_SVGS: dict[str, str] = {
 def get_provider_from_model_id(model_id: str) -> str | None:
     """Detect the AI provider from a model ID string."""
     model_id_lower = model_id.lower()
+    
+    # Support 3rd party model formats like openrouter/openai/gpt-4o or litellm/anthropic/claude-3
+    if "/" in model_id_lower:
+        base_name = model_id_lower.split("/")[-1]
+    else:
+        base_name = model_id_lower
 
-    # OpenAI: prefix-based matching
+    # OpenAI: verify base_name for gpt-, o1, etc.
     OPENAI_PREFIXES = [
-        "gpt-", "dall-e", "text-embedding-ada", "whisper", "babbage", "davinci",
+        "gpt-", "dall-e", "text-embedding", "whisper", "babbage", "davinci", "chatgpt", "o1", "o3", "o4"
     ]
-    # Also match short standalone OpenAI model names: o1, o3, o4, o1-mini, o3-mini, etc.
-    OPENAI_SHORT = re.compile(r"^o[134](-|$)")
-    if any(model_id_lower.startswith(p) for p in OPENAI_PREFIXES) or OPENAI_SHORT.match(model_id_lower):
+    if any(base_name.startswith(p) for p in OPENAI_PREFIXES) or "openai" in model_id_lower:
         return "openai"
 
     PROVIDER_PATTERNS = [
-        (["claude"], "anthropic"),
-        (["gemini", "gemma", "palm"], "google"),
-        (["llama", "meta-llama", "meta/llama"], "meta"),
+        (["claude"], "claude"),
+        (["anthropic"], "anthropic"),
+        (["gemini"], "gemini"),
+        (["gemma", "palm", "google"], "google"),
+        (["llama", "meta-llama", "meta/llama", "meta"], "meta"),
         (["mistral", "mixtral", "codestral", "devstral", "mathstral"], "mistral"),
-        (["command-r", "cohere/"], "cohere"),
+        (["command-r", "cohere"], "cohere"),
         (["deepseek"], "deepseek"),
-        (["qwen", "qwq", "qvq"], "alibabacloud"),
-        (["phi-", "phi/", "copilot", "microsoft/"], "microsoft"),
-        (["sonar", "pplx-", "perplexity"], "perplexity"),
-        (["grok", "xai/"], "x"),
+        (["qwen", "qwq", "qvq", "alibabacloud"], "alibabacloud"),
+        (["copilot"], "copilot"),
+        (["phi-", "phi/", "microsoft"], "microsoft"),
+        (["sonar", "pplx", "perplexity"], "perplexity"),
+        (["grok", "xai"], "x"),
         (["ollama"], "ollama"),
     ]
 
@@ -524,17 +540,14 @@ def get_provider_from_model_id(model_id: str) -> str | None:
 @router.get("/model/profile/image")
 def get_model_profile_image(id: str, user=Depends(get_verified_user)):
     model = Models.get_model_by_id(id)
+    provider = get_provider_from_model_id(id)
 
     if model:
         etag = f'"{model.updated_at}"' if model.updated_at else None
 
         if model.meta.profile_image_url:
-            if model.meta.profile_image_url.startswith("http"):
-                return Response(
-                    status_code=status.HTTP_302_FOUND,
-                    headers={"Location": model.meta.profile_image_url},
-                )
-            elif model.meta.profile_image_url.startswith("data:image"):
+            # If it's a data image (user uploaded custom image), we always respect it.
+            if model.meta.profile_image_url.startswith("data:image"):
                 try:
                     header, base64_data = model.meta.profile_image_url.split(",", 1)
                     image_data = base64.b64decode(base64_data)
@@ -552,9 +565,15 @@ def get_model_profile_image(id: str, user=Depends(get_verified_user)):
                     )
                 except Exception as e:
                     pass
+            # If it's an external URL, only use it if we DON'T have a beautiful local official SVG for it.
+            elif model.meta.profile_image_url.startswith("http"):
+                if not provider or provider not in PROVIDER_SVGS:
+                    return Response(
+                        status_code=status.HTTP_302_FOUND,
+                        headers={"Location": model.meta.profile_image_url},
+                    )
 
-    # No custom image: serve the provider's official SVG icon inline
-    provider = get_provider_from_model_id(id)
+    # Use the local provider's official SVG icon inline
     if provider and provider in PROVIDER_SVGS:
         return Response(
             content=PROVIDER_SVGS[provider],

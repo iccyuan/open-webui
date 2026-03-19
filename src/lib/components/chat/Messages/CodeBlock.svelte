@@ -12,6 +12,7 @@
 		renderMermaidDiagram,
 		renderVegaVisualization
 	} from '$lib/utils';
+	import { LANGUAGE_ICONS } from '$lib/utils/languageIcons';
 
 	import 'highlight.js/styles/github-dark.min.css';
 
@@ -19,9 +20,11 @@
 	import SvgPanZoom from '$lib/components/common/SVGPanZoom.svelte';
 
 	import ChevronUp from '$lib/components/icons/ChevronUp.svelte';
-	import ChevronUpDown from '$lib/components/icons/ChevronUpDown.svelte';
-	import CommandLine from '$lib/components/icons/CommandLine.svelte';
-	import Cube from '$lib/components/icons/Cube.svelte';
+	import ChevronDown from '$lib/components/icons/ChevronDown.svelte';
+	import Clipboard from '$lib/components/icons/Clipboard.svelte';
+	import Check from '$lib/components/icons/Check.svelte';
+	import FloppyDisk from '$lib/components/icons/FloppyDisk.svelte';
+	import Eye from '$lib/components/icons/Eye.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
 
 	const i18n = getContext('i18n');
@@ -38,136 +41,47 @@
 	export let preview = false;
 	export let collapsed = false;
 
-	// Maps language identifiers → Devicon icon name
-	// See https://devicon.dev for available icons
-	const LANG_ICON_MAP: Record<string, string> = {
-		// Web
-		javascript: 'javascript',
+	// Alias map: alternative language identifiers → canonical key in LANGUAGE_ICONS
+	const LANG_ALIASES: Record<string, string> = {
 		js: 'javascript',
-		typescript: 'typescript',
 		ts: 'typescript',
-		html: 'html5',
-		css: 'css3',
-		scss: 'sass',
-		sass: 'sass',
-		less: 'less',
-		vue: 'vuejs',
-		svelte: 'svelte',
-		react: 'react',
+		html5: 'html',
+		css3: 'css',
+		sass: 'scss',
 		jsx: 'react',
 		tsx: 'react',
-		angular: 'angularjs',
-		graphql: 'graphql',
+		angularjs: 'angular',
 		webassembly: 'wasm',
-		wasm: 'wasm',
-		// Systems
-		python: 'python',
 		py: 'python',
 		javac: 'java',
-		java: 'java',
-		kotlin: 'kotlin',
 		kt: 'kotlin',
-		swift: 'swift',
-		go: 'go',
 		golang: 'go',
-		rust: 'rust',
 		rs: 'rust',
-		c: 'c',
-		cpp: 'cplusplus',
-		'c++': 'cplusplus',
-		csharp: 'csharp',
+		'c++': 'cpp',
 		cs: 'csharp',
-		scala: 'scala',
-		groovy: 'groovy',
-		clojure: 'clojure',
-		elixir: 'elixir',
-		erlang: 'erlang',
-		haskell: 'haskell',
-		ocaml: 'ocaml',
-		lua: 'lua',
-		perl: 'perl',
-		php: 'php',
-		ruby: 'ruby',
 		rb: 'ruby',
-		r: 'r',
-		matlab: 'matlab',
-		dart: 'dart',
-		zig: 'zig',
-		crystal: 'crystal',
-		julia: 'julia',
-		// Build tools
-		gradle: 'gradle',
-		'gradle.kts': 'gradle',
-		maven: 'maven',
-		cmake: 'cmake',
-		bazel: 'bazel',
-		nix: 'nixos',
-		// Shell / DevOps
-		bash: 'bash',
 		sh: 'bash',
 		shell: 'bash',
 		zsh: 'bash',
-		powershell: 'powershell',
 		ps1: 'powershell',
-		docker: 'docker',
 		dockerfile: 'docker',
-		nginx: 'nginx',
-		apache: 'apache',
-		kubernetes: 'kubernetes',
 		k8s: 'kubernetes',
-		helm: 'helm',
-		terraform: 'terraform',
-		ansible: 'ansible',
-		// Runtime / Pkg managers
-		nodejs: 'nodejs',
 		node: 'nodejs',
-		npm: 'npm',
-		yarn: 'yarn',
-		pnpm: 'pnpm',
-		deno: 'denojs',
-		bun: 'bun',
-		// Data / DB
 		sql: 'postgresql',
-		mysql: 'mysql',
-		postgresql: 'postgresql',
 		postgres: 'postgresql',
-		sqlite: 'sqlite',
-		mongodb: 'mongodb',
-		redis: 'redis',
-		elasticsearch: 'elasticsearch',
-		neo4j: 'neo4j',
-		cassandra: 'cassandra',
-		// Cloud / Platforms
-		firebase: 'firebase',
-		supabase: 'supabase',
-		// Testing / Bundlers / Tools
-		jest: 'jest',
-		vitest: 'vitejs',
-		mocha: 'mocha',
-		webpack: 'webpack',
-		vite: 'vitejs',
-		rollup: 'rollup',
-		eslint: 'eslint',
-		// Config / Markup
-		yaml: 'yaml',
 		yml: 'yaml',
-		json: 'json',
-		markdown: 'markdown',
 		md: 'markdown',
-		latex: 'latex',
 		tex: 'latex',
-		// Notebooks / Special
-		jupyter: 'jupyter',
-		solidity: 'solidity',
-		sol: 'solidity'
+		sol: 'solidity',
+		'gradle.kts': 'gradle',
+		vitest: 'vite',
+		vitejs: 'vite'
 	};
 
 	const getLanguageIcon = (language: string): string | null => {
 		if (!language) return null;
-		const iconName = LANG_ICON_MAP[language.toLowerCase()];
-		if (!iconName) return null;
-		// Use Devicon CDN - colorful, high-quality programming language icons
-		return `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${iconName}/${iconName}-original.svg`;
+		const key = language.toLowerCase();
+		return LANGUAGE_ICONS[key] ?? LANGUAGE_ICONS[LANG_ALIASES[key] ?? ''] ?? null;
 	};
 
 	export let token;
@@ -576,81 +490,105 @@
 			{/if}
 		{:else}
 			<div
-				class="sticky {stickyButtonsClassName} left-0 right-0 py-2 pl-4.5 pr-3 flex items-center justify-between w-full z-30 text-xs text-black dark:text-white rounded-t-xl bg-gray-50 dark:bg-gray-900"
+				class="sticky {stickyButtonsClassName} left-0 right-0 px-3 py-1.5 flex items-center justify-between w-full z-30 text-xs rounded-t-xl bg-gray-50 dark:bg-gray-900"
 			>
 				<div
-					class="flex items-center gap-1.5 text-gray-700 dark:text-gray-400 text-xs font-medium pointer-events-none"
+					class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 font-medium pointer-events-none select-none"
 				>
 					{#if getLanguageIcon(lang)}
-						<img
-							src={getLanguageIcon(lang)}
-							alt="{lang} logo"
-							class="size-4 object-contain"
-							loading="lazy"
-						/>
+						<span class="size-3.5 flex-shrink-0 flex items-center justify-center [&>svg]:size-full opacity-90">
+							{@html getLanguageIcon(lang)}
+						</span>
 					{/if}
-					{lang ? lang.charAt(0).toUpperCase() + lang.slice(1) : ''}
+					<span>{lang ? lang.charAt(0).toUpperCase() + lang.slice(1) : ''}</span>
 				</div>
+
 				<div class="flex items-center gap-0.5">
-					<button
-						class="flex gap-1 items-center bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-						on:click={collapseCodeBlock}
-					>
-						<div class=" -translate-y-[0.5px]">
-							<ChevronUpDown className="size-3" />
-						</div>
+					<!-- Collapse / Expand -->
+					<Tooltip content={collapsed ? $i18n.t('Expand') : $i18n.t('Collapse')} placement="top">
+						<button
+							class="p-1.5 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+							on:click={collapseCodeBlock}
+						>
+							{#if collapsed}
+								<ChevronDown className="size-3.5" />
+							{:else}
+								<ChevronUp className="size-3.5" />
+							{/if}
+						</button>
+					</Tooltip>
 
-						<div>
-							{collapsed ? $i18n.t('Expand') : $i18n.t('Collapse')}
-						</div>
-					</button>
-
+					<!-- Run (Python) -->
 					{#if ($config?.features?.enable_code_execution ?? true) && (lang.toLowerCase() === 'python' || lang.toLowerCase() === 'py' || (lang === '' && checkPythonCode(code)))}
 						{#if executing}
-							<div
-								class="run-code-button bg-none border-none p-0.5 cursor-not-allowed bg-white/90 dark:bg-black/90 backdrop-blur-sm"
-							>
-								{$i18n.t('Running')}
+							<div class="p-1.5 rounded-md text-gray-400 dark:text-gray-500 cursor-not-allowed run-code-button">
+								<svg class="size-3.5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+									<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+								</svg>
 							</div>
 						{:else if run}
-							<button
-								class="flex gap-1 items-center run-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-								on:click={async () => {
-									code = _code;
-									await tick();
-									executePython(code);
-								}}
-							>
-								<div>
-									{$i18n.t('Run')}
-								</div>
-							</button>
+							<Tooltip content={$i18n.t('Run')} placement="top">
+								<button
+									class="p-1.5 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors run-code-button"
+									on:click={async () => {
+										code = _code;
+										await tick();
+										executePython(code);
+									}}
+								>
+									<svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+										<path d="M8 5.14v14l11-7-11-7z" />
+									</svg>
+								</button>
+							</Tooltip>
 						{/if}
 					{/if}
 
+					<!-- Save -->
 					{#if save}
-						<button
-							class="save-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-							on:click={saveCode}
-						>
-							{saved ? $i18n.t('Saved') : $i18n.t('Save')}
-						</button>
+						<Tooltip content={saved ? $i18n.t('Saved') : $i18n.t('Save')} placement="top">
+							<button
+								class="p-1.5 rounded-md transition-colors save-code-button {saved
+									? 'text-green-500 dark:text-green-400'
+									: 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10'}"
+								on:click={saveCode}
+							>
+								{#if saved}
+									<Check className="size-3.5" />
+								{:else}
+									<FloppyDisk className="size-3.5" />
+								{/if}
+							</button>
+						</Tooltip>
 					{/if}
 
-					<button
-						class="copy-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-						on:click={copyCode}>{copied ? $i18n.t('Copied') : $i18n.t('Copy')}</button
-					>
-
-					{#if preview && ['html', 'svg'].includes(lang)}
+					<!-- Copy -->
+					<Tooltip content={copied ? $i18n.t('Copied') : $i18n.t('Copy')} placement="top">
 						<button
-							class="flex gap-1 items-center run-code-button bg-none border-none transition rounded-lg px-2 py-1 bg-white/90 dark:bg-black/90 hover:bg-gray-50 dark:hover:bg-gray-900 backdrop-blur-sm"
-							on:click={previewCode}
+							class="p-1.5 rounded-md transition-colors copy-code-button {copied
+								? 'text-green-500 dark:text-green-400'
+								: 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10'}"
+							on:click={copyCode}
 						>
-							<div>
-								{$i18n.t('Preview')}
-							</div>
+							{#if copied}
+								<Check className="size-3.5" />
+							{:else}
+								<Clipboard className="size-3.5" />
+							{/if}
 						</button>
+					</Tooltip>
+
+					<!-- Preview -->
+					{#if preview && ['html', 'svg'].includes(lang)}
+						<Tooltip content={$i18n.t('Preview')} placement="top">
+							<button
+								class="p-1.5 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors run-code-button"
+								on:click={previewCode}
+							>
+								<Eye className="size-3.5" />
+							</button>
+						</Tooltip>
 					{/if}
 				</div>
 			</div>
