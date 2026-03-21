@@ -59,6 +59,10 @@
 
 	export let messagesCount: number | null = 1;
 	let messagesLoading = false;
+	// IDs of messages just loaded by loadMoreMessages.
+	// Their LazyLoad uses forceInitialRender=true so they render at full height
+	// immediately, giving an accurate scroll correction.
+	let forceVisibleMessageIds: Set<string> = new Set();
 
 	// Reset messagesCount when chatId changes so each chat starts fresh.
 	$: if (chatId) {
@@ -112,60 +116,40 @@
 		// Disable autoScroll during preloading to prevent scrollToBottom from firing.
 		autoScroll = false;
 
-		// --- Capture scroll anchor BEFORE loading new messages ---
-		// Find the navbar height for offset calculation.
-		const navbar = document.querySelector('.sticky.top-0');
-		const navbarHeight = navbar ? (navbar as HTMLElement).offsetHeight : 0;
-
-		// Find the user message element that is currently closest to (but below)
-		// the navbar bottom edge. This is the anchor we want to keep visible after
-		// the new (older) messages are prepended to the DOM.
-		let anchorEl: Element | null = null;
-		let anchorOffsetInContainer = 0; // scrollTop value at which anchor's top == navbarBottom
-		if (!wasAtBottom) {
-			const containerRect = element.getBoundingClientRect();
-			const navbarBottom = containerRect.top + navbarHeight;
-			const userMessages = element.querySelectorAll('[data-role="user"]');
-			for (const msg of Array.from(userMessages)) {
-				const rect = msg.getBoundingClientRect();
-				// Pick the first user message whose top is at or below the navbar bottom.
-				if (rect.top >= navbarBottom - 4) {
-					anchorEl = msg;
-					// Distance from container top to msg top (in scroll coordinates)
-					anchorOffsetInContainer = rect.top - containerRect.top + element.scrollTop;
-					break;
-				}
-			}
-			// Fallback: use the very first user message if none is below navbar.
-			if (!anchorEl && userMessages.length > 0) {
-				const rect = userMessages[0].getBoundingClientRect();
-				anchorEl = userMessages[0];
-				anchorOffsetInContainer = rect.top - containerRect.top + element.scrollTop;
-			}
-		}
+		// Use the current first message as a scroll anchor. After adding the new
+		// messages above it, we restore the anchor to its original viewport position.
+		// This is more robust than the scrollHeight-delta approach because it does
+		// not depend on LazyLoad expansion timing.
+		const oldFirstId = messages[0]?.id;
+		const anchorEl = oldFirstId ? document.getElementById(`message-${oldFirstId}`) : null;
+		const anchorTop = anchorEl ? anchorEl.getBoundingClientRect().top : null;
 
 		messagesLoading = true;
-		messagesCount += 1;
+		messagesCount += 2;
 		buildMessages();
+		// Mark newly added messages (everything before the old first message) for
+		// immediate full render so their real heights are in the DOM before we
+		// compute the scroll correction. Without this, LazyLoad would render 3rem
+		// placeholders and the correction would be wrong, causing a jump when the
+		// messages later expand.
+		const oldFirstIdx = oldFirstId ? messages.findIndex((m) => m.id === oldFirstId) : 0;
+		forceVisibleMessageIds = new Set(messages.slice(0, oldFirstIdx).map((m) => m.id));
 		await tick();
 
 		if (wasAtBottom) {
-			// User was at the bottom (e.g. just entered the chat) — stay at bottom.
+			// User was at the bottom — stay at bottom.
 			element.scrollTop = element.scrollHeight;
-			// Restore autoScroll so subsequent preload cycles know we're still at bottom.
 			autoScroll = true;
-			// Don't set loadCooldown — allow continued preloading until all
-			// messages are loaded or the Loader scrolls out of view.
-		} else if (anchorEl) {
-			// After new messages are prepended, re-measure the anchor element's
-			// new position and set scrollTop so it sits just below the navbar.
-			const containerRect = element.getBoundingClientRect();
-			const newRect = anchorEl.getBoundingClientRect();
-			const newOffsetInContainer = newRect.top - containerRect.top + element.scrollTop;
-			element.scrollTop = Math.max(0, newOffsetInContainer - navbarHeight - 4);
-			// Block re-entry until the next real user scroll gesture.
-			loadCooldown = true;
 		} else {
+			// Apply correction immediately after tick() — still in the microtask queue,
+			// so the browser has not repainted yet. getBoundingClientRect() forces a
+			// synchronous layout so we get accurate coordinates, and the scrollTop
+			// assignment takes effect before the next paint.  No intermediate frame
+			// with wrong position is ever shown to the user.
+			if (anchorEl && anchorTop !== null) {
+				const newAnchorTop = anchorEl.getBoundingClientRect().top;
+				element.scrollTop += newAnchorTop - anchorTop;
+			}
 			loadCooldown = true;
 		}
 
@@ -574,7 +558,8 @@
 								{selectedModels}
 								messageId={message.id}
 								idx={messageIdx}
-								isLastMessage={messageIdx === messages.length - 1}
+\t\t\t\t\t\t\t\tisLastMessage={messageIdx === messages.length - 1}
+								forceInitialRender={forceVisibleMessageIds.has(message.id)}
 								{user}
 								{setInputText}
 								{gotoMessage}

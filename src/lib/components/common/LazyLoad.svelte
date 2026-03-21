@@ -5,9 +5,13 @@
 	export let threshold = 0.01;
 	export let rootMargin = '500px';
 	export let keepAlive = false;
+	// When true, render content immediately on mount without waiting for IO.
+	// The IO observer still runs and will record placeholderHeight / unmount
+	// once the element leaves the rootMargin zone.
+	export let forceInitialRender = false;
 
 	let containerElement;
-	let isVisible = false;
+	let isVisible = forceInitialRender;
 	let placeholderHeight = 0;
 	let observer;
 

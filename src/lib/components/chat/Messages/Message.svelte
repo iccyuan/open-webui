@@ -45,6 +45,7 @@
 	export let editCodeBlock = true;
 	export let topPadding = false;
 	export let isLastMessage = false;
+	export let forceInitialRender = false;
 </script>
 
 <div
@@ -56,7 +57,7 @@
 		: 'max-w-5xl'} mx-auto rounded-lg group"
 >
 	{#if history.messages[messageId]}
-		<LazyLoad className="w-full" rootMargin="500px" keepAlive={isLastMessage}>
+		<LazyLoad className="w-full" rootMargin="500px" keepAlive={isLastMessage} {forceInitialRender}>
 			{#if history.messages[messageId].role === 'user'}
 				<UserMessage
 					{user}
