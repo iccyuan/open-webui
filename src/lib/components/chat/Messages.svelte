@@ -541,8 +541,8 @@
 						>
 							<!-- Minimal loading indicator with fixed height -->
 							<div
-								class="w-full flex justify-center items-center gap-2 transition-opacity duration-300"
-								style="height: 2rem; opacity: {messagesLoading ? '0.5' : '0'};"
+								class="w-full flex justify-center items-center gap-2 transition-all duration-300 ease-out"
+								style="height: 2rem; opacity: {messagesLoading ? '1' : '0'}; transform: translateY({messagesLoading ? '0' : '-6px'});"
 								aria-hidden="true"
 							>
 								<Spinner className="size-3" />

@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	export let className = '';
 	export let threshold = 0.01;
@@ -45,7 +46,9 @@
 
 <div bind:this={containerElement} class={className}>
 	{#if isVisible || keepAlive}
-		<slot />
+		<div style="display: contents" in:fade={{ duration: 150 }}>
+			<slot />
+		</div>
 	{:else if placeholderHeight > 0}
 		<div style="height: {placeholderHeight}px;" />
 	{:else}
