@@ -4,11 +4,11 @@
  * All icons use viewBox="0 0 16 16" for crisp pixel-level rendering.
  */
 export const LANGUAGE_ICONS: Record<string, string> = {
-	// ── JavaScript ── yellow badge with JS
-	javascript: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#F7DF1E"/><text x="1.5" y="12.5" font-family="Arial,sans-serif" font-size="8.5" font-weight="bold" fill="#000">JS</text></svg>`,
+	// ── JavaScript ── yellow floating badge (inset, not full-bleed)
+	javascript: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="#F7DF1E"/><text x="3.5" y="12" font-family="Arial,sans-serif" font-size="8" font-weight="bold" fill="#000">JS</text></svg>`,
 
-	// ── TypeScript ── blue badge with TS
-	typescript: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#3178C6"/><text x="1.5" y="12.5" font-family="Arial,sans-serif" font-size="8.5" font-weight="bold" fill="#fff">TS</text></svg>`,
+	// ── TypeScript ── blue floating badge (inset, not full-bleed)
+	typescript: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="#3178C6"/><text x="3.5" y="12" font-family="Arial,sans-serif" font-size="8" font-weight="bold" fill="#fff">TS</text></svg>`,
 
 	// ── Python ── interlinked snake shapes (blue + yellow)
 	python: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 4 2.6 4 4v2.5h4v1H3C1.5 7.5 1 8.5 1 10s.7 2.5 2 2.5h1V11c0-1 .7-1.5 2-1.5h4c1.2 0 2-.7 2-2V4c0-1.3-1.5-2.5-4-2.5zm-1 2a.75.75 0 1 1 0 1.5A.75.75 0 0 1 7 3.5z" fill="#3776AB"/><path d="M8 14.5c2.5 0 4-1.1 4-2.5V9.5H8v-1h5c1.5 0 2-1 2-2.5s-.7-2.5-2-2.5h-1V5c0 1-.7 1.5-2 1.5H6c-1.2 0-2 .7-2 2v2.5c0 1.3 1.5 2.5 4 2.5zm1-2a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z" fill="#FFD43B"/></svg>`,
@@ -16,8 +16,8 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── HTML5 ── orange shield with white H
 	html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M2 1l1.2 13L8 15.5 12.8 14 14 1H2z" fill="#E34F26"/><path d="M8 14.3V2.5h4.7l-1 10.7L8 14.3z" fill="#EF652A"/><path d="M5.5 5.5h5l-.2 2H6l.2 1.8h3.9l-.3 3.2L8 13l-1.8-.5-.1-1.5H7.3l.05.8.65.17.65-.17.07-.85-.05.06H5.7L5.5 5.5z" fill="#fff"/></svg>`,
 
-	// ── CSS3 ── purple badge modern CSS logo
-	css: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#663399"/><text x="1.5" y="12.5" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#fff">CSS</text></svg>`,
+	// ── CSS3 ── purple shield (same structure as HTML5, purple palette)
+	css: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M2 1l1.2 13L8 15.5 12.8 14 14 1H2z" fill="#663399"/><path d="M8 14.3V2.5h4.7l-1 10.7L8 14.3z" fill="#8545C7"/><path d="M5.5 5.5h5l-.2 2H6l.2 1.8h3.9l-.3 3.2L8 13l-1.8-.5-.1-1.5H7.3l.05.8.65.17.65-.17.07-.85-.05.06H5.7L5.5 5.5z" fill="#fff"/></svg>`,
 
 	// ── Sass/SCSS ── pink circle
 	scss: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="#CC6699"/><path d="M5 10.2c.5-.2 1.1-.5 1.8-.8.2.4.4.7.8.9.6.3 1.3.1 1.9-.5.7-.8.4-1.8-.1-2.4-.6-.6-1.7-1-1.9-1.9-.1-.8.5-1.5 1.3-1.6.7-.1 1.3.3 1.7.9l-1 .7c-.1-.3-.4-.5-.7-.4-.3 0-.5.3-.4.6.1.5 1 .9 1.6 1.5.9.9 1 2.4.1 3.3-.9 1-2.3 1.3-3.4.8-.6-.3-1-.8-1.2-1.4z" fill="#fff"/></svg>`,
@@ -37,8 +37,8 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── GraphQL ── pink hexagon
 	graphql: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><polygon points="8,2 13.5,5.5 13.5,10.5 8,14 2.5,10.5 2.5,5.5" stroke="#E10098" stroke-width="1.3"/><circle cx="8" cy="2" r="1.3" fill="#E10098"/><circle cx="13.5" cy="5.5" r="1.3" fill="#E10098"/><circle cx="13.5" cy="10.5" r="1.3" fill="#E10098"/><circle cx="8" cy="14" r="1.3" fill="#E10098"/><circle cx="2.5" cy="10.5" r="1.3" fill="#E10098"/><circle cx="2.5" cy="5.5" r="1.3" fill="#E10098"/></svg>`,
 
-	// ── Go ── teal badge
-	go: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#00ADD8"/><text x="2" y="12.5" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#fff">Go</text></svg>`,
+	// ── Go ── teal floating badge (inset, not full-bleed)
+	go: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="#00ADD8"/><text x="3" y="12" font-family="Arial,sans-serif" font-size="8.5" font-weight="bold" fill="#fff">Go</text></svg>`,
 
 	// ── Rust ── gear wheel
 	rust: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="#CE422B" stroke-width="1.4"/><circle cx="8" cy="8" r="5.5" stroke="#CE422B" stroke-width="1.1"/><path d="M8 1.5V2.5M8 13.5V14.5M1.5 8H2.5M13.5 8H14.5M3.2 3.2l.7.7M12.1 12.1l.7.7M12.8 3.2l-.7.7M3.9 12.1l-.7.7" stroke="#CE422B" stroke-width="1.3" stroke-linecap="round"/></svg>`,
@@ -49,17 +49,17 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── Kotlin ── purple/orange K triangle
 	kotlin: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><defs><linearGradient id="kg" x1="0" y1="0" x2="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#E44857"/><stop offset="0.5" stop-color="#C711E1"/><stop offset="1" stop-color="#7F52FF"/></linearGradient></defs><path d="M1 1h7L1 8.5V1zM8 1L1 15h7L15 1H8zM15 15L8 8l7 7z" fill="url(#kg)"/></svg>`,
 
-	// ── Swift ── orange bird swoosh
-	swift: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" rx="3.5" fill="#F05138"/><path d="M12 4.5C10.5 3 8 2.8 5.5 4.5L3.5 6c1.5 1 3.5 2 5 1.5C7 8.5 5 7.5 4 6.5c1.5 1.5 3.5 3 6 2.5-.5.5-1 1-1.5 1.5H11c.5-.5 1-1.5 1-2.5 0-.5-.3-1-.5-1.5l1.5.5z" fill="#fff"/></svg>`,
+	// ── Swift ── orange rounded badge (inset) with bird swoosh
+	swift: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="13" height="13" rx="3" fill="#F05138"/><path d="M12 4.5C10.5 3 8 2.8 5.5 4.5L3.5 6c1.5 1 3.5 2 5 1.5C7 8.5 5 7.5 4 6.5c1.5 1.5 3.5 3 6 2.5-.5.5-1 1-1.5 1.5H11c.5-.5 1-1.5 1-2.5 0-.5-.3-1-.5-1.5l1.5.5z" fill="#fff"/></svg>`,
 
-	// ── C ── blue badge
-	c: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#5C6BC0"/><text x="4.5" y="12" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="#fff">C</text></svg>`,
+	// ── C ── blue circle with white C-arc stroke
+	c: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#5C6BC0"/><path d="M11.5 4.5A5 5 0 1 0 11.5 11.5" stroke="#fff" stroke-width="1.9" stroke-linecap="round" fill="none"/></svg>`,
 
-	// ── C++ ── dark blue badge
-	cpp: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#00599C"/><text x="1.5" y="12" font-family="Arial,sans-serif" font-size="7.5" font-weight="bold" fill="#fff">C++</text></svg>`,
+	// ── C++ ── dark blue circle with C-arc + plus signs
+	cpp: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#00599C"/><path d="M9.5 4.5A4 4 0 1 0 9.5 11.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M12 5.5v2.5M10.75 6.75h2.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 9v2.5M10.75 10.25h2.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>`,
 
-	// ── C# ── purple badge
-	csharp: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#68217A"/><text x="2" y="12" font-family="Arial,sans-serif" font-size="7.5" font-weight="bold" fill="#fff">C#</text></svg>`,
+	// ── C# ── purple circle with C-arc + hash lines
+	csharp: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#68217A"/><path d="M9 4.5A4 4 0 1 0 9 11.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M11 5.5v5M12.5 5.5v5M10.2 7.5h3.1M10.2 9.5h3.1" stroke="#fff" stroke-width="1" stroke-linecap="round"/></svg>`,
 
 	// ── Scala ── red stacked bars
 	scala: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="3" rx="0.5" fill="#DC322F"/><rect x="2" y="7.5" width="12" height="3" rx="0.5" fill="#DC322F" opacity="0.7"/><rect x="2" y="12" width="12" height="3" rx="0.5" fill="#DC322F" opacity="0.4"/></svg>`,
@@ -91,8 +91,8 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── Bash ── dark terminal with >_
 	bash: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><path d="M2 4.5l5 4-5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="9" y1="12.5" x2="15" y2="12.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
 
-	// ── PowerShell ── dark blue with PS
-	powershell: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#012456"/><path d="M2 10.5l4-4-4-4" stroke="#00B5F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="10.5" x2="14" y2="10.5" stroke="#00B5F5" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+	// ── PowerShell ── dark navy floating badge (inset) with PS terminal mark
+	powershell: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="#012456"/><path d="M3 10l3.5-3.5L3 3" stroke="#00B5F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="10" x2="13" y2="10" stroke="#00B5F5" stroke-width="1.5" stroke-linecap="round"/></svg>`,
 
 	// ── Docker ── blue whale
 	docker: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><rect x="1" y="7.5" width="2.2" height="2" rx="0.4" fill="#2496ED"/><rect x="3.6" y="7.5" width="2.2" height="2" rx="0.4" fill="#2496ED"/><rect x="6.2" y="7.5" width="2.2" height="2" rx="0.4" fill="#2496ED"/><rect x="3.6" y="5" width="2.2" height="2" rx="0.4" fill="#2496ED"/><rect x="6.2" y="5" width="2.2" height="2" rx="0.4" fill="#2496ED"/><rect x="8.8" y="7.5" width="2.2" height="2" rx="0.4" fill="#2496ED"/><path d="M11 9.5c1-.1 3-.7 2.5-3a2.8 2.8 0 0 0-1.5-.8s-.2-1.5-1.8-1.8" stroke="#2496ED" stroke-width="1" stroke-linecap="round"/><path d="M.5 9.5S1 13 4.5 13h7c2 0 2.5-2 2.5-2" stroke="#2496ED" stroke-width="1" stroke-linecap="round"/></svg>`,
@@ -106,8 +106,8 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── Node.js ── green hex
 	nodejs: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 1L14 4.5v7L8 15 2 11.5v-7L8 1z" fill="#339933"/><text x="3.5" y="11.5" font-family="Arial,sans-serif" font-size="5.5" font-weight="bold" fill="#fff">node</text></svg>`,
 
-	// ── npm ── red badge
-	npm: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2" fill="#CB3837"/><rect x="3" y="5" width="10" height="7" rx="0.5" fill="#fff"/><rect x="5" y="7" width="1.5" height="3" fill="#CB3837"/><rect x="8" y="7" width="1.5" height="5" fill="#CB3837"/><rect x="10" y="7" width="1.5" height="3" fill="#CB3837"/></svg>`,
+	// ── npm ── red floating badge (inset) with official npm N pattern
+	npm: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1.5" fill="#CB3837"/><rect x="3.5" y="5" width="9" height="6.5" rx="0.5" fill="#fff"/><rect x="5" y="6.5" width="1.5" height="3" fill="#CB3837"/><rect x="7.8" y="6.5" width="1.5" height="5" fill="#CB3837"/><rect x="10.5" y="6.5" width="1.5" height="3" fill="#CB3837"/></svg>`,
 
 	// ── Deno ── black/white circle
 	deno: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#fff" stroke="#000" stroke-width="1"/><circle cx="8" cy="8" r="3" fill="#000"/><circle cx="8" cy="8" r="1.2" fill="#fff"/></svg>`,
@@ -118,8 +118,8 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── PostgreSQL ── dark blue drum
 	postgresql: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="5" rx="6" ry="2.5" fill="#336791"/><rect x="2" y="5" width="12" height="6" fill="#336791"/><ellipse cx="8" cy="11" rx="6" ry="2.5" fill="#4A90D9" opacity="0.7"/><ellipse cx="8" cy="5" rx="6" ry="2.5" fill="#6BA3D6" opacity="0.5"/></svg>`,
 
-	// ── MySQL ── ocean blue + dolphin shape
-	mysql: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#00618A"/><text x="1" y="12" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#F29111">MySQL</text></svg>`,
+	// ── MySQL ── DB cylinder with orange-tinted top (distinct from PostgreSQL blue)
+	mysql: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="5" rx="5.5" ry="2" fill="#00618A"/><rect x="2.5" y="5" width="11" height="6" fill="#00618A"/><ellipse cx="8" cy="11" rx="5.5" ry="2" fill="#0A7CB8" opacity="0.8"/><ellipse cx="8" cy="5" rx="5.5" ry="2" fill="#F29111" opacity="0.55"/><path d="M12 3c1.5-.3 2.5.7 2.5 1.8" stroke="#F29111" stroke-width="1.2" stroke-linecap="round"/></svg>`,
 
 	// ── MongoDB ── green leaf
 	mongodb: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C8 1.5 2 7 2 11a6 6 0 0 0 12 0C14 7 8 1.5 8 1.5z" fill="#4DB33D"/><line x1="8" y1="1.5" x2="8" y2="14.5" stroke="#3FA037" stroke-width="2"/></svg>`,
@@ -127,17 +127,17 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── Redis ── red cylinder
 	redis: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="12" rx="6" ry="2.5" fill="#A51F17"/><rect x="2" y="7" width="12" height="5" fill="#D82C20"/><ellipse cx="8" cy="7" rx="6" ry="2.5" fill="#FF6B6B"/><path d="M4 8h2l1 1.5 1.5-3 1.5 3L11 8h2" stroke="#fff" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/></svg>`,
 
-	// ── JSON ── dark code badge
-	json: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#1e1e1e"/><text x="2" y="9" font-family="monospace" font-size="7" fill="#CE9178">{}</text><text x="2" y="14" font-family="monospace" font-size="5" fill="#9CDCFE">json</text></svg>`,
+	// ── JSON ── curly brace shape (amber, universal JSON symbol)
+	json: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><path d="M6.5 3c-1 0-1.5.5-1.5 1.5V6.5L3.5 8l1.5 1.5V11.5c0 1 .5 1.5 1.5 1.5" stroke="#CE9178" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 3c1 0 1.5.5 1.5 1.5V6.5L12.5 8 11 9.5V11.5c0 1-.5 1.5-1.5 1.5" stroke="#CE9178" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 
-	// ── YAML ── red badge
-	yaml: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#CB171E"/><text x="1" y="12" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#fff">YAML</text></svg>`,
+	// ── YAML ── red document with horizontal lines
+	yaml: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12.5" rx="1.5" stroke="#CB171E" stroke-width="1.3"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="#CB171E" stroke-width="1.1" stroke-linecap="round"/></svg>`,
 
 	// ── Markdown ── blue MD badge
 	markdown: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><rect x="0.7" y="3" width="14.6" height="10" rx="2" stroke="#083fa1" stroke-width="1.2"/><path d="M3 11V5l2.5 3L8 5v6" stroke="#fff" fill="none" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 11V5M9 8l2 3 2-3" stroke="#fff" fill="none" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 
-	// ── LaTeX ── teal badge
-	latex: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2" fill="#008080"/><text x="1.5" y="12" font-family="serif" font-size="7.5" font-weight="bold" fill="#fff">LaTeX</text></svg>`,
+	// ── LaTeX ── teal document with formula hint (dog-ear corner)
+	latex: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><path d="M3 2h7.5L13 4.5V14H3V2z" stroke="#008080" stroke-width="1.3" stroke-linejoin="round"/><path d="M10.5 2v2.5H13" stroke="#008080" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 7h5M5.5 9.5h3.5M5.5 12h4.5" stroke="#008080" stroke-width="1" stroke-linecap="round"/></svg>`,
 
 	// ── Jupyter ── orange circles
 	jupyter: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="2.5" fill="#F37726"/><circle cx="13" cy="11" r="2.5" fill="#F37726"/><circle cx="3" cy="11" r="2.5" fill="#F37726"/><circle cx="8" cy="8" r="2.5" fill="#4e4e4e"/></svg>`,
@@ -172,14 +172,14 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── R ── blue badge
 	r: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><ellipse cx="8" cy="7.5" rx="6" ry="5.5" fill="#276DC3" stroke="#75AADB" stroke-width="0.8"/><text x="4.5" y="11" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#fff">R</text><path d="M8.5 9.5l4 5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`,
 
-	// ── WebAssembly ── purple badge
-	wasm: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2" fill="#654FF0"/><text x="1" y="12" font-family="Arial,sans-serif" font-size="6" font-weight="bold" fill="#fff">WASM</text></svg>`,
+	// ── WebAssembly ── purple box with W waveform path
+	wasm: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1.5" fill="#654FF0"/><path d="M4.5 5l1.5 7 2-4.5 2 4.5 1.5-7" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
 
 	// ── Sass ── pink circle Ss
 	sass: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#CC6699"/><text x="3" y="12" font-family="Arial,sans-serif" font-size="8" font-weight="bold" fill="#fff">Ss</text></svg>`,
 
-	// ── Less ── dark blue badge
-	less: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2.5" fill="#1D365D"/><text x="2" y="12" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#fff">less</text></svg>`,
+	// ── Less ── dark navy circle with white Less L-dot mark
+	less: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#1D365D"/><path d="M5.5 4v7.5h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="5" r="1.2" fill="#3B82F6"/></svg>`,
 
 	// ── OCaml ── orange badge
 	ocaml: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#EE6A1A"/><text x="2" y="12" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#fff">ML</text></svg>`,
@@ -238,8 +238,8 @@ export const LANGUAGE_ICONS: Record<string, string> = {
 	// ── Elasticsearch ── teal lens
 	elasticsearch: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="8" rx="6.5" ry="5.5" fill="#00BFB3"/><ellipse cx="8" cy="6" rx="4.5" ry="2.5" fill="#FEC514" opacity="0.9"/><ellipse cx="8" cy="10.5" rx="4.5" ry="2.5" fill="#FEC514" opacity="0.6"/></svg>`,
 
-	// ── SQLite ── navy blue S
-	sqlite: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" rx="2.5" fill="#003B57"/><text x="2" y="12" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#fff">S</text><text x="8" y="12" font-family="Arial,sans-serif" font-size="6" fill="#fff" opacity="0.7">QL</text></svg>`,
+	// ── SQLite ── navy floating badge (inset) with S/QL
+	sqlite: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" fill="#003B57"/><text x="3.5" y="12" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#fff">S</text><text x="9.5" y="12" font-family="Arial,sans-serif" font-size="5.5" fill="#fff" opacity="0.7">QL</text></svg>`,
 
 	// ── pnpm ── gold grid
 	pnpm: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="1" y="1" width="4.5" height="4.5" rx="0.5" fill="#F9AD00"/><rect x="6" y="1" width="4.5" height="4.5" rx="0.5" fill="#F9AD00"/><rect x="11" y="1" width="4.5" height="4.5" rx="0.5" fill="#F9AD00"/><rect x="1" y="6.5" width="4.5" height="4.5" rx="0.5" fill="#F9AD00"/><rect x="6" y="6.5" width="4.5" height="4.5" rx="0.5" fill="#4E4E4E"/><rect x="11" y="6.5" width="4.5" height="4.5" rx="0.5" fill="#4E4E4E"/><rect x="1" y="12" width="4.5" height="4.5" rx="0.5" fill="#F9AD00"/><rect x="6" y="12" width="4.5" height="4.5" rx="0.5" fill="#4E4E4E"/><rect x="11" y="12" width="4.5" height="4.5" rx="0.5" fill="#4E4E4E"/></svg>`,
