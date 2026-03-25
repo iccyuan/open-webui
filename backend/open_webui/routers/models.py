@@ -5,6 +5,7 @@ import base64
 import json
 import asyncio
 import logging
+import time
 
 from open_webui.models.groups import Groups
 from open_webui.models.models import (
@@ -465,10 +466,10 @@ PROVIDER_SVGS: dict[str, str] = {
 </g>
 </svg>""",
 
-    "x": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
+    "xai": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 110">
 <circle cx="50" cy="50" r="50" fill="#000"/>
-<g transform="translate(20, 20) scale(2.5)">
-<path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" fill="white"/>
+<g transform="translate(22, 22) scale(2.75)">
+<path d="M4.5 2 L12 10.5 L19.5 2 L22 2 L13.3 12 L22 22 L19.5 22 L12 13.5 L4.5 22 L2 22 L10.7 12 L2 2 Z" fill="white"/>
 </g>
 </svg>""",
 
@@ -494,6 +495,79 @@ PROVIDER_SVGS: dict[str, str] = {
 </g>
 </svg>""",
 }
+
+# Official website domains for fetching provider logos
+PROVIDER_LOGO_DOMAINS: dict[str, str] = {
+    "openai": "openai.com",
+    "claude": "anthropic.com",
+    "anthropic": "anthropic.com",
+    "google": "google.com",
+    "gemini": "gemini.google.com",
+    "meta": "meta.com",
+    "mistral": "mistral.ai",
+    "deepseek": "deepseek.com",
+    "alibabacloud": "alibabacloud.com",
+    "microsoft": "microsoft.com",
+    "copilot": "copilot.microsoft.com",
+    "perplexity": "perplexity.ai",
+    "xai": "x.ai",
+    "ollama": "ollama.com",
+    "cohere": "cohere.com",
+}
+
+# In-memory cache: provider -> (image_bytes, content_type, expires_at)
+_provider_logo_cache: dict[str, tuple[bytes, str, float]] = {}
+PROVIDER_LOGO_CACHE_TTL = 86400  # 24 hours
+
+
+async def fetch_provider_logo(provider: str, size: int = 128) -> tuple[bytes, str] | None:
+    """Fetch provider logo from official website, with in-memory caching.
+
+    Uses Clearbit (128px fixed) for small sizes, Google Favicon for larger sizes.
+    Cache key includes size to store separate entries per resolution.
+    """
+    import aiohttp
+
+    now = time.time()
+    cache_key = f"{provider}:{size}"
+    cached = _provider_logo_cache.get(cache_key)
+    if cached:
+        data, content_type, expires_at = cached
+        if now < expires_at:
+            return data, content_type
+
+    domain = PROVIDER_LOGO_DOMAINS.get(provider)
+    if not domain:
+        return None
+
+    # Clearbit returns a fixed 128px PNG; only use it for sizes that fit.
+    # Google Favicon supports arbitrary sz= values (practical max ~256).
+    favicon_size = min(size, 256)
+    candidate_urls = (
+        [
+            f"https://logo.clearbit.com/{domain}",
+            f"https://www.google.com/s2/favicons?domain={domain}&sz={favicon_size}",
+        ]
+        if size <= 128
+        else [
+            f"https://www.google.com/s2/favicons?domain={domain}&sz={favicon_size}",
+        ]
+    )
+
+    timeout = aiohttp.ClientTimeout(total=5)
+    for url in candidate_urls:
+        try:
+            async with aiohttp.ClientSession(timeout=timeout) as session:
+                async with session.get(url, allow_redirects=True) as resp:
+                    if resp.status == 200:
+                        data = await resp.read()
+                        content_type = resp.headers.get("Content-Type", "image/png").split(";")[0].strip()
+                        _provider_logo_cache[cache_key] = (data, content_type, now + PROVIDER_LOGO_CACHE_TTL)
+                        return data, content_type
+        except Exception:
+            continue
+
+    return None
 
 
 def get_provider_from_model_id(model_id: str) -> str | None:
@@ -526,7 +600,7 @@ def get_provider_from_model_id(model_id: str) -> str | None:
         (["copilot"], "copilot"),
         (["phi-", "phi/", "microsoft"], "microsoft"),
         (["sonar", "pplx", "perplexity"], "perplexity"),
-        (["grok", "xai"], "x"),
+        (["grok", "xai"], "xai"),
         (["ollama"], "ollama"),
     ]
 
@@ -538,7 +612,7 @@ def get_provider_from_model_id(model_id: str) -> str | None:
 
 
 @router.get("/model/profile/image")
-def get_model_profile_image(id: str, user=Depends(get_verified_user)):
+async def get_model_profile_image(id: str, size: int = 128, user=Depends(get_verified_user)):
     model = Models.get_model_by_id(id)
     provider = get_provider_from_model_id(id)
 
@@ -565,15 +639,26 @@ def get_model_profile_image(id: str, user=Depends(get_verified_user)):
                     )
                 except Exception as e:
                     pass
-            # If it's an external URL, only use it if we DON'T have a beautiful local official SVG for it.
+            # If it's an external URL, only use it if we DON'T have an official logo for it.
             elif model.meta.profile_image_url.startswith("http"):
-                if not provider or provider not in PROVIDER_SVGS:
+                if not provider or provider not in PROVIDER_LOGO_DOMAINS:
                     return Response(
                         status_code=status.HTTP_302_FOUND,
                         headers={"Location": model.meta.profile_image_url},
                     )
 
-    # Use the local provider's official SVG icon inline
+    # Try to fetch logo from official website (with in-memory cache)
+    if provider and provider in PROVIDER_LOGO_DOMAINS:
+        logo = await fetch_provider_logo(provider, size=size)
+        if logo:
+            data, content_type = logo
+            return StreamingResponse(
+                io.BytesIO(data),
+                media_type=content_type,
+                headers={"Cache-Control": "public, max-age=86400"},
+            )
+
+    # Fallback: use the local hand-crafted SVG
     if provider and provider in PROVIDER_SVGS:
         return Response(
             content=PROVIDER_SVGS[provider],
