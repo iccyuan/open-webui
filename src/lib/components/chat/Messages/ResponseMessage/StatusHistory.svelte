@@ -2,6 +2,8 @@
 	import { getContext } from 'svelte';
 	const i18n = getContext('i18n');
 
+	import { slide } from 'svelte/transition';
+
 	import StatusItem from './StatusHistory/StatusItem.svelte';
 	import ChevronRight from '$lib/components/icons/ChevronRight.svelte';
 
@@ -37,7 +39,7 @@
 		<div class="my-1">
 			<!-- Header -->
 			<button
-				class="flex items-center gap-1.5 w-full text-left py-0.5 group"
+				class="flex items-center gap-1.5 text-left py-0.5 group w-full"
 				aria-label={$i18n.t('Toggle status history')}
 				aria-expanded={showHistory}
 				on:click={() => {
@@ -45,36 +47,21 @@
 				}}
 			>
 				<!-- Chevron -->
-				<div class="text-gray-400 dark:text-gray-500 transition-transform duration-200 {showHistory ? 'rotate-90' : ''}">
+				<div class="shrink-0 text-gray-400 dark:text-gray-500 transition-transform duration-200 {showHistory ? 'rotate-90' : ''}">
 					<ChevronRight className="size-3" />
 				</div>
 
-				<!-- Lightbulb Icon -->
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 text-purple-700 dark:text-purple-700">
-					<path d="M12 .75a8.25 8.25 0 0 0-4.135 15.39c.686.398 1.115 1.008 1.134 1.623a.75.75 0 0 0 .75.737h4.502a.75.75 0 0 0 .75-.737c.02-.615.448-1.225 1.134-1.623A8.25 8.25 0 0 0 12 .75Z"/>
-					<path fill-rule="evenodd" d="M9.013 19.9a.75.75 0 0 1 .877-.597 11.319 11.319 0 0 0 4.22 0 .75.75 0 1 1 .28 1.473 12.819 12.819 0 0 1-4.78 0 .75.75 0 0 1-.597-.876ZM9.754 22.344a.75.75 0 0 1 .824-.668 13.682 13.682 0 0 0 2.844 0 .75.75 0 1 1 .156 1.492 15.156 15.156 0 0 1-3.156 0 .75.75 0 0 1-.668-.824Z" clip-rule="evenodd"/>
-				</svg>
-
-				<!-- Label -->
-				<span class="text-sm font-medium text-purple-700 dark:text-purple-700">
-					{#if isDone}
-						{$i18n.t('Thought')}
-					{:else}
-						{$i18n.t('Thinking')}
-					{/if}
-				</span>
+				<!-- Status label (always visible) -->
+				{#if status}
+					<span class="text-sm text-gray-500 dark:text-gray-400 truncate">
+						{status.description || status.action || ''}{showHistory ? '' : '...'}
+					</span>
+				{/if}
 			</button>
-
-			<!-- Preview (when collapsed) -->
-			{#if !showHistory && status}
-				<div class="ml-6 text-sm text-gray-500 dark:text-gray-400 line-clamp-1">
-					{status.description || status.action || ''}...
-				</div>
-			{/if}
 
 			<!-- Expanded Content -->
 			{#if showHistory}
-				<div class="ml-6 mt-1">
+				<div transition:slide={{ duration: 200 }} class="ml-6 mt-1">
 					{#each history as historyStatus, idx}
 						<div class="flex items-stretch gap-2 mb-0.5">
 							<div>
