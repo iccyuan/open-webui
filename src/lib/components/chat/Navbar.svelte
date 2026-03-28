@@ -74,9 +74,9 @@
 
 <nav
 	class="sticky top-0 z-30 w-full {chat?.id
-		? 'pt-0.5 pb-1'
-		: 'pt-1 pb-1'} -mb-12 flex flex-col items-center drag-region backdrop-blur-md"
-	style="-webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 100%); mask-image: linear-gradient(to bottom, black 45%, transparent 100%);"
+		? 'pt-0.5'
+		: 'pt-1'} pb-6 -mb-12 flex flex-col items-center drag-region backdrop-blur-md"
+	style="-webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%); mask-image: linear-gradient(to bottom, black 50%, transparent 100%);"
 >
 	<div class="flex items-center w-full pl-1.5 pr-1">
 		<div
