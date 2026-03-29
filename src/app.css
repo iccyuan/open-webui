@@ -460,10 +460,10 @@ input[type='number'] {
 }
 
 .codespan {
-	color: #eb5757;
+	color: #e06050;
 	padding: 0.15rem 0.3rem;
 	font-size: 0.85em;
-	@apply font-mono rounded-md bg-gray-100 dark:bg-gray-800 mx-0.5;
+	@apply font-mono rounded-md bg-gray-50 dark:bg-gray-800/60 mx-0.5;
 }
 
 .svelte-flow {
