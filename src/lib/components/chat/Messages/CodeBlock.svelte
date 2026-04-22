@@ -10,11 +10,13 @@
 		copyToClipboard,
 		initMermaid,
 		renderMermaidDiagram,
-		renderVegaVisualization
+		renderVegaVisualization,
+		unescapeHtml
 	} from '$lib/utils';
 	import { LANGUAGE_ICONS } from '$lib/utils/languageIcons';
 
 	import 'highlight.js/styles/github-dark.min.css';
+	import equal from 'fast-deep-equal';
 
 	import CodeEditor from '$lib/components/common/CodeEditor.svelte';
 	import SvgPanZoom from '$lib/components/common/SVGPanZoom.svelte';
@@ -436,7 +438,7 @@
 	$: if (token) {
 		if (token.text !== _token?.text || token.raw !== _token?.raw) {
 			_token = token;
-		} else if (JSON.stringify(token) !== JSON.stringify(_token)) {
+		} else if (!equal(token, _token)) {
 			_token = token;
 		}
 	}
@@ -451,21 +453,8 @@
 
 	const onAttributesUpdate = () => {
 		if (attributes?.output) {
-			// Create a helper function to unescape HTML entities
-			const unescapeHtml = (html) => {
-				const textArea = document.createElement('textarea');
-				textArea.innerHTML = html;
-				return textArea.value;
-			};
-
 			try {
-				// Unescape the HTML-encoded string
-				const unescapedOutput = unescapeHtml(attributes.output);
-
-				// Parse the unescaped string into JSON
-				const output = JSON.parse(unescapedOutput);
-
-				// Assign the parsed values to variables
+				const output = JSON.parse(unescapeHtml(attributes.output));
 				stdout = output.stdout;
 				stderr = output.stderr;
 				result = output.result;
@@ -678,13 +667,13 @@
 					>
 						{#if executing}
 							<div class=" ">
-								<div class=" text-gray-500 text-sm mb-1">{$i18n.t('STDOUT/STDERR')}</div>
+								<div class=" text-gray-500 text-xs mb-1">{$i18n.t('STDOUT/STDERR')}</div>
 								<div class="text-sm">{$i18n.t('Running...')}</div>
 							</div>
 						{:else}
 							{#if stdout || stderr}
 								<div class=" ">
-									<div class=" text-gray-500 text-sm mb-1">{$i18n.t('STDOUT/STDERR')}</div>
+									<div class=" text-gray-500 text-xs mb-1">{$i18n.t('STDOUT/STDERR')}</div>
 									<div
 										class="text-sm font-mono whitespace-pre-wrap {stdout?.split('\n')?.length > 100
 											? `max-h-96`
@@ -696,7 +685,7 @@
 							{/if}
 							{#if result || files}
 								<div class=" ">
-									<div class=" text-gray-500 text-sm mb-1">{$i18n.t('RESULT')}</div>
+									<div class=" text-gray-500 text-xs mb-1">{$i18n.t('RESULT')}</div>
 									{#if result}
 										<div class="text-sm">{`${JSON.stringify(result)}`}</div>
 									{/if}
