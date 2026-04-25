@@ -54,7 +54,7 @@
 	data-role={history.messages[messageId]?.role}
 	class="flex flex-col justify-between px-5 mb-1.5 w-full {($settings?.widescreenMode ?? null)
 		? 'max-w-full'
-		: 'max-w-5xl'} mx-auto rounded-lg group"
+		: 'max-w-5xl'} mx-auto rounded-lg group message-listitem"
 >
 	{#if history.messages[messageId]}
 		<LazyLoad className="w-full" rootMargin="500px" keepAlive={isLastMessage} {forceInitialRender}>
@@ -138,3 +138,13 @@
 		</LazyLoad>
 	{/if}
 </div>
+
+<style>
+	/* Browser-native virtualization: skip rendering of off-screen messages
+	   without destroying their component trees. Replaces the JS-based
+	   culling that caused catastrophic mount/destroy thrashing. */
+	.message-listitem {
+		content-visibility: auto;
+		contain-intrinsic-size: auto 150px;
+	}
+</style>

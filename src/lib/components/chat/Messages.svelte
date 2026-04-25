@@ -107,102 +107,7 @@
 		scrollListenerCleanup?.();
 	});
 
-	// Off-screen message unloading. Heights are measured on scroll so spacers
-	// always match real sizes — no scroll jumps, no feedback loops needed.
-	const OVERSCAN = 3;
-	const DEFAULT_HEIGHT = 150;
-	let visibleStart = 0;
-	let visibleEnd = 0;
-	let messageHeights = new Map();
-	let topSpacerHeight = 0;
-	let bottomSpacerHeight = 0;
-	let pendingCull = null;
-
-	// Helper: get height for a message (cached or default)
-	const heightOf = (id) => messageHeights.get(id) ?? DEFAULT_HEIGHT;
-
-	/** Measure all currently rendered message elements and cache their heights */
-	const measureMessageHeights = () => {
-		const elements = document
-			.getElementById('messages-container')
-			?.querySelectorAll('[role="listitem"]');
-		if (!elements) return;
-
-		messageHeights = new Map([
-			...messageHeights,
-			...Array.from(elements)
-				.map((el, i) => [messages[visibleStart + i]?.id, el.getBoundingClientRect().height])
-				.filter(([id]) => id != null)
-		]);
-	};
-
-	/** Compute visible range from current scroll position and apply */
-	const updateVisibleRange = () => {
-		const container = document.getElementById('messages-container');
-		if (!container || messages.length === 0) return;
-
-		const st = container.scrollTop;
-		const ch = container.clientHeight;
-
-		// Build prefix sums from measured heights
-		const prefixSums = messages.reduce(
-			(acc, m) => [...acc, acc[acc.length - 1] + heightOf(m.id)],
-			[0]
-		);
-
-		const firstVisible = Math.max(0, prefixSums.findIndex((h) => h > st) - 1);
-		const lastVisible = prefixSums.findIndex((h) => h > st + ch);
-
-		// Only cull messages that have been measured (so spacer height is accurate)
-		// findIndex returns -1 when all are measured → no limit on culling
-		const firstUnmeasured = messages.findIndex((m) => !messageHeights.has(m.id));
-		const cullLimit = firstUnmeasured === -1 ? messages.length : firstUnmeasured;
-
-		visibleStart = Math.max(0, Math.min(firstVisible - OVERSCAN, cullLimit));
-		visibleEnd = Math.min(
-			messages.length,
-			(lastVisible === -1 ? messages.length : lastVisible) + OVERSCAN
-		);
-		topSpacerHeight = prefixSums[visibleStart] ?? 0;
-		bottomSpacerHeight = (prefixSums[messages.length] ?? 0) - (prefixSums[visibleEnd] ?? 0);
-	};
-
-	/** Scroll handler: measure every frame, cull via rAF (same throttle as pendingRebuild) */
-	const handleContainerScroll = () => {
-		measureMessageHeights();
-
-		// Don't cull during progressive loading
-		if (messagesLoading) return;
-
-		if (!pendingCull) {
-			pendingCull = requestAnimationFrame(() => {
-				pendingCull = null;
-				updateVisibleRange();
-			});
-		}
-	};
-
-	let scrollListenerAttached = false;
-
-	const attachScrollListener = () => {
-		if (scrollListenerAttached) return;
-		const container = document.getElementById('messages-container');
-		if (!container) return;
-
-		container.addEventListener('scroll', handleContainerScroll, { passive: true });
-		scrollListenerAttached = true;
-	};
-
-	onMount(() => {
-		attachScrollListener();
-	});
-
 	onDestroy(() => {
-		const container = document.getElementById('messages-container');
-		if (container && scrollListenerAttached) {
-			container.removeEventListener('scroll', handleContainerScroll);
-		}
-		cancelAnimationFrame(pendingCull);
 		cancelAnimationFrame(pendingRebuild);
 	});
 
@@ -233,6 +138,7 @@
 		// messages later expand.
 		const oldFirstIdx = oldFirstId ? messages.findIndex((m) => m.id === oldFirstId) : 0;
 		forceVisibleMessageIds = new Set(messages.slice(0, oldFirstIdx).map((m) => m.id));
+
 		await tick();
 
 		if (wasAtBottom) {
@@ -276,7 +182,6 @@
 		}
 
 		messages = _messages.reverse();
-		visibleEnd = messages.length;
 	};
 
 	// Throttle message list rebuilds to once per animation frame during streaming.
@@ -295,8 +200,6 @@
 			cancelAnimationFrame(pendingRebuild);
 			pendingRebuild = null;
 			buildMessages();
-			// No explicit culling needed — scrollToBottom will fire a scroll event,
-			// which triggers handleContainerScroll → rAF → updateVisibleRange
 		} else if (_messages) {
 			// Content update (streaming) — throttle to once per frame
 			if (!pendingRebuild) {
@@ -649,13 +552,7 @@
 						</Loader>
 					{/if}
 					<ul role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
-						<!-- Top spacer: sum of cached heights for messages above visible range -->
-						{#if topSpacerHeight > 0}
-							<div style="height: {topSpacerHeight}px" aria-hidden="true" />
-						{/if}
-
-						{#each messages.slice(visibleStart, visibleEnd) as message, i (message.id)}
-							{@const messageIdx = visibleStart + i}
+						{#each messages as message, messageIdx (message.id)}
 							<Message
 								{chatId}
 								bind:history
@@ -686,11 +583,6 @@
 								{topPadding}
 							/>
 						{/each}
-
-						<!-- Bottom spacer: sum of cached heights for messages below visible range -->
-						{#if bottomSpacerHeight > 0}
-							<div style="height: {bottomSpacerHeight}px" aria-hidden="true" />
-						{/if}
 					</ul>
 				</section>
 				<div class="pb-18" />
