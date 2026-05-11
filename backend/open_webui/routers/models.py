@@ -30,8 +30,8 @@ from fastapi import (
     Depends,
     HTTPException,
     Request,
-    status,
     Response,
+    status,
 )
 from fastapi.responses import RedirectResponse, StreamingResponse
 
@@ -39,6 +39,7 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from open_webui.utils.auth import get_admin_user, get_verified_user
 from open_webui.utils.access_control import has_permission, filter_allowed_access_grants
 from open_webui.config import BYPASS_ADMIN_ACCESS_CONTROL
+from open_webui.env import ENABLE_PROFILE_IMAGE_URL_FORWARDING
 from open_webui.internal.db import get_async_session
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -414,30 +415,37 @@ class ModelIdForm(BaseModel):
 async def get_model_by_id(id: str, user=Depends(get_verified_user), db: AsyncSession = Depends(get_async_session)):
     model = await Models.get_model_by_id(id, db=db)
     if model:
-        if (
+        write_access = (
             (user.role == 'admin' and BYPASS_ADMIN_ACCESS_CONTROL)
-            or model.user_id == user.id
+            or user.id == model.user_id
             or await AccessGrants.has_access(
                 user_id=user.id,
                 resource_type='model',
                 resource_id=model.id,
-                permission='read',
+                permission='write',
                 db=db,
             )
+        )
+
+        if write_access or await AccessGrants.has_access(
+            user_id=user.id,
+            resource_type='model',
+            resource_id=model.id,
+            permission='read',
+            db=db,
         ):
+            model_dict = model.model_dump()
+            # Strip params (system prompt and other admin-curated config)
+            # for read-only callers — matches the params strip already
+            # enforced on /api/models in utils/models.py.  Owners, admins
+            # under BYPASS_ADMIN_ACCESS_CONTROL, and write-grant holders
+            # still receive the full object so the workspace edit UI keeps
+            # working for users who legitimately curate the model.
+            if not write_access:
+                model_dict['params'] = {}
             return ModelAccessResponse(
-                **model.model_dump(),
-                write_access=(
-                    (user.role == 'admin' and BYPASS_ADMIN_ACCESS_CONTROL)
-                    or user.id == model.user_id
-                    or await AccessGrants.has_access(
-                        user_id=user.id,
-                        resource_type='model',
-                        resource_id=model.id,
-                        permission='write',
-                        db=db,
-                    )
-                ),
+                **model_dict,
+                write_access=write_access,
             )
         else:
             raise HTTPException(
@@ -682,52 +690,71 @@ def get_provider_from_model_id(model_id: str) -> str | None:
 
 @router.get('/model/profile/image')
 async def get_model_profile_image(
+    request: Request,
     id: str,
     size: int = 128,
     user=Depends(get_verified_user),
     db: AsyncSession = Depends(get_async_session),
 ):
-    model_meta = await Models.get_model_meta_by_id(id, db=db)
+    profile_image_url = None
+    updated_at = None
     provider = get_provider_from_model_id(id)
 
+    # First, check the database for regular models
+    model_meta = await Models.get_model_meta_by_id(id, db=db)
     if model_meta:
         meta, updated_at = model_meta
         profile_image_url = (meta or {}).get('profile_image_url')
 
-        if profile_image_url:
-            # If it's a data image (user uploaded custom image), we always respect it.
-            if profile_image_url.startswith('data:image'):
-                try:
-                    header, base64_data = profile_image_url.split(',', 1)
-                    image_data = base64.b64decode(base64_data)
-                    image_buffer = io.BytesIO(image_data)
-                    media_type = header.split(';')[0].lstrip('data:')
+    # Fallback: check arena models stored in config (not in the DB)
+    if not profile_image_url:
+        arena_models = getattr(
+            getattr(request.app.state, 'config', None),
+            'EVALUATION_ARENA_MODELS',
+            [],
+        )
+        for arena_model in arena_models:
+            if arena_model.get('id') == id:
+                profile_image_url = arena_model.get('meta', {}).get('profile_image_url')
+                break
 
-                    headers = {'Content-Disposition': 'inline'}
-                    if updated_at:
-                        headers['ETag'] = f'"{updated_at}"'
+    if profile_image_url:
+        # If it's a data image (user uploaded custom image), we always respect it.
+        if profile_image_url.startswith('data:image'):
+            try:
+                header, base64_data = profile_image_url.split(',', 1)
+                image_data = base64.b64decode(base64_data)
+                image_buffer = io.BytesIO(image_data)
+                media_type = header.split(';')[0].lstrip('data:')
 
-                    return StreamingResponse(
-                        image_buffer,
-                        media_type=media_type,
-                        headers=headers,
-                    )
-                except Exception:
-                    pass
-            # If it's an external URL, only use it if we DON'T have an official logo for it.
-            elif profile_image_url.startswith('http'):
-                if not provider or provider not in PROVIDER_LOGO_DOMAINS:
-                    return Response(
-                        status_code=status.HTTP_302_FOUND,
-                        headers={'Location': profile_image_url},
-                    )
-            else:
-                safe_static = _safe_static_redirect_path(profile_image_url)
-                if safe_static:
-                    return RedirectResponse(
-                        url=safe_static,
-                        status_code=status.HTTP_302_FOUND,
-                    )
+                headers = {'Content-Disposition': 'inline'}
+                if updated_at:
+                    headers['ETag'] = f'"{updated_at}"'
+
+                return StreamingResponse(
+                    image_buffer,
+                    media_type=media_type,
+                    headers=headers,
+                )
+            except Exception:
+                pass
+        # If it's an external URL, only use it if we DON'T have an official logo
+        # for it AND forwarding is enabled (to avoid IP/UA/Referer leaks).
+        elif profile_image_url.startswith('http'):
+            if (not provider or provider not in PROVIDER_LOGO_DOMAINS) and (
+                ENABLE_PROFILE_IMAGE_URL_FORWARDING
+            ):
+                return Response(
+                    status_code=status.HTTP_302_FOUND,
+                    headers={'Location': profile_image_url},
+                )
+        else:
+            safe_static = _safe_static_redirect_path(profile_image_url)
+            if safe_static:
+                return RedirectResponse(
+                    url=safe_static,
+                    status_code=status.HTTP_302_FOUND,
+                )
 
     # Try to fetch logo from official website (with in-memory cache)
     if provider and provider in PROVIDER_LOGO_DOMAINS:
