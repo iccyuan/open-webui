@@ -132,7 +132,7 @@
 	let scrollObserver: MutationObserver | null = null;
 	let scrollObserverTimer: ReturnType<typeof setTimeout> | null = null;
 
-	const startScrollObserver = () => {
+	const startScrollObserver = (duration = 3000) => {
 		stopScrollObserver();
 		if (!messagesContainerElement) return;
 
@@ -148,8 +148,7 @@
 			characterData: false
 		});
 
-		// Auto-stop after 3s — by then all LazyLoad content should have rendered
-		scrollObserverTimer = setTimeout(() => stopScrollObserver(), 3000);
+		scrollObserverTimer = setTimeout(() => stopScrollObserver(), duration);
 	};
 
 	const stopScrollObserver = () => {
@@ -1941,6 +1940,10 @@
 			await tick();
 			if (autoScroll) {
 				scrollToBottom();
+				// Post-`done` DOM mutations (streaming spans → plain text, code
+				// highlighting, button row, follow-ups) drift content upward
+				// because the container has overflow-anchor: none. Re-pin briefly.
+				startScrollObserver(800);
 			}
 
 			// Fire-and-forget: run chatCompletedHandler for background work
